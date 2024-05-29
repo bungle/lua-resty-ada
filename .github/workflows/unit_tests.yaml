@@ -1,0 +1,25 @@
+name: unit_tests
+on: [pull_request]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        luaVersion: ["luajit-openresty"]
+    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup environment
+        run: docker build dev/ -t resty-ada
+
+      - name: Run tests
+        run: docker run --network=host -v $PWD:/test -w /test resty-ada bash -c "luarocks make && make unit"
+
+      - name: Generate report
+        run: docker run --network=host -v $PWD:/test -w /test resty-ada bash -c "luarocks make && luacov"
+
+      - name: Print report summary
+        run: docker run --network=host -v $PWD:/test -w /test resty-ada sed -n '/Summary/,$p' luacov.report.out
