@@ -1,5 +1,6 @@
 local lib = require("resty.ada.lib")
 local utils = require("resty.ada.utils")
+local search = require("resty.ada.search")
 
 
 local ada_string_to_lua = utils.ada_string_to_lua
@@ -825,12 +826,26 @@ local function idna_to_unicode(url)
   local r = ada_owned_string_to_lua(lib.ada_idna_to_unicode(url, #url))
   return r
 end
-local function idna_to_ascii(url)
-  local r = ada_owned_string_to_lua(lib.ada_idna_to_ascii(url, #url))
+function mt:to_unicode()
+  local r = idna_to_unicode(self:get_href())
   return r
 end
 
 
+local function idna_to_ascii(url)
+  local r = ada_owned_string_to_lua(lib.ada_idna_to_ascii(url, #url))
+  return r
+end
+function mt:to_ascii()
+  local r = idna_to_ascii(self:get_href())
+  return r
+end
+
+
+function mt:tostring()
+  local r = self:get_href()
+  return r
+end
 function mt:__tostring()
   local r = self:get_href()
   return r
@@ -843,8 +858,269 @@ function mt:__len()
 end
 
 
+local function search_sort_with_base(url, base)
+  local u, err = parse_with_base(url, base)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.sort(u:get_search()))
+  local r = u:get_href()
+  return r
+end
+local function search_sort(url)
+  local u, err = parse(url)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.sort(u:get_search()))
+  local r = u:get_href()
+  return r
+end
+function mt:search_sort()
+  self:set_search(search.sort(self:get_search()))
+  return self
+end
+
+
+local function search_append_with_base(url, base, key, value)
+  local u, err = parse_with_base(url, base)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.append(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+local function search_append(url, key, value)
+  local u, err = parse(url)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.append(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+function mt:search_append(key, value)
+  self:set_search(search.append(self:get_search(), key, value))
+  return self
+end
+
+
+local function search_set_with_base(url, base, key, value)
+  local u, err = parse_with_base(url, base)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.set(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+local function search_set(url, key, value)
+  local u, err = parse(url)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.set(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+function mt:search_set(key, value)
+  self:set_search(search.set(self:get_search(), key, value))
+  return self
+end
+
+
+local function search_remove_with_base(url, base, key)
+  local u, err = parse_with_base(url, base)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.remove(u:get_search(), key))
+  local r = u:get_href()
+  return r
+end
+local function search_remove(url, key)
+  local u, err = parse(url)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.remove(u:get_search(), key))
+  local r = u:get_href()
+  return r
+end
+function mt:search_remove(key)
+  self:set_search(search.remove(self:get_search(), key))
+  return self
+end
+
+
+local function search_remove_value_with_base(url, base, key, value)
+  local u, err = parse_with_base(url, base)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.remove(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+local function search_remove_value(url, key, value)
+  local u, err = parse(url)
+  if err then
+    return nil, err
+  end
+  u:set_search(search.remove_value(u:get_search(), key, value))
+  local r = u:get_href()
+  return r
+end
+function mt:search_remove_value(key, value)
+  self:set_search(search.remove_value(self:get_search(), key, value))
+  return self
+end
+
+
+local function search_has_with_base(url, base, key)
+  local r = search.has(get_search_with_base(url, base), key)
+  return r
+end
+local function search_has(url, key)
+  local r = search.has(get_search(url), key)
+  return r
+end
+function mt:search_has(key)
+  local r = search.has(self:get_search(), key)
+  return r
+end
+
+
+local function search_has_value_with_base(url, base, key, value)
+  local r = search.has_value(get_search_with_base(url, base), key, value)
+  return r
+end
+local function search_has_value(url, key, value)
+  local r = search.has_value(get_search(url), key, value)
+  return r
+end
+function mt:search_has_value(key, value)
+  local r = search.has_value(self:get_search(), key, value)
+  return r
+end
+
+
+local function search_get_with_base(url, base, key)
+  local r = search.get(get_search_with_base(url, base), key)
+  return r
+end
+local function search_get(url, key)
+  local r = search.get(get_search(url), key)
+  return r
+end
+function mt:search_get(key)
+  local r = search.get(self:get_search(), key)
+  return r
+end
+
+
+local function search_get_all_with_base(url, base, key)
+  local r = search.get_all(get_search_with_base(url, base), key)
+  return r
+end
+local function search_get_all(url, key)
+  local r = search.get_all(get_search(url), key)
+  return r
+end
+function mt:search_get_all(key)
+  local r = search.get_all(self:get_search(), key)
+  return r
+end
+
+
+local function search_size_with_base(url, base)
+  local r = search.size(get_search_with_base(url, base))
+  return r
+end
+local function search_size(url)
+  local r = search.size(get_search(url))
+  return r
+end
+function mt:search_size()
+  local r = search.size(self:get_search())
+  return r
+end
+
+
+local function search_pairs_with_base(url, base)
+  local pairs_iter, entries_iter = search.pairs(get_search_with_base(url, base))
+  return pairs_iter, entries_iter
+end
+local function search_pairs(url)
+  local pairs_iter, entries_iter = search.pairs(get_search(url))
+  return pairs_iter, entries_iter
+end
+function mt:search_pairs()
+  local pairs_iter, entries_iter = search.pairs(self:get_search())
+  return pairs_iter, entries_iter
+end
+
+
+local function search_ipairs_with_base(url, base)
+  local ipairs_iter, entries_iter, invariant_state = search.ipairs(get_search_with_base(url, base))
+  return ipairs_iter, entries_iter, invariant_state
+end
+local function search_ipairs(url)
+  local ipairs_iter, entries_iter, invariant_state = search.ipairs(get_search(url))
+  return ipairs_iter, entries_iter, invariant_state
+end
+function mt:search_ipairs()
+  local ipairs_iter, entries_iter, invariant_state = search.ipairs(self:get_search())
+  return ipairs_iter, entries_iter, invariant_state
+end
+
+
+local function search_each_with_base(url, base)
+  local each_iter, entries_iter = search.each(get_search_with_base(url, base))
+  return each_iter, entries_iter
+end
+local function search_each(url)
+  local each_iter, entries_iter = search.each(get_search(url))
+  return each_iter, entries_iter
+end
+function mt:search_each()
+  local each_iter, entries_iter = search.each(self:get_search())
+  return each_iter, entries_iter
+end
+
+
+local function search_each_key_with_base(url, base)
+  local each_key_iter, keys_iter = search.each_key(get_search_with_base(url, base))
+  return each_key_iter, keys_iter
+end
+local function search_each_key(url)
+  local each_key_iter, keys_iter = search.each_key(get_search(url))
+  return each_key_iter, keys_iter
+end
+function mt:search_each_key()
+  local each_key_iter, keys_iter = search.each_key(self:get_search())
+  return each_key_iter, keys_iter
+end
+
+
+local function search_each_value_with_base(url, base)
+  local each_value_iter, values_iter = search.each_value(get_search_with_base(url, base))
+  return each_value_iter, values_iter
+end
+local function search_each_value(url)
+  local each_value_iter, values_iter = search.each_value(get_search(url))
+  return each_value_iter, values_iter
+end
+function mt:search_each_value()
+  local each_value_iter, values_iter = search.each_value(self:get_search())
+  return each_value_iter, values_iter
+end
+
+
 local functions = {
   _VERSION = _VERSION,
+  search = search,
   parse = parse,
   parse_with_base = parse_with_base,
   is_valid = is_valid,
@@ -924,15 +1200,37 @@ local functions = {
   clear_hash_with_base = clear_hash_with_base,
   idna_to_unicode = idna_to_unicode,
   idna_to_ascii = idna_to_ascii,
+  search_sort = search_sort,
+  search_sort_with_base = search_sort_with_base,
+  search_append = search_append,
+  search_append_with_base = search_append_with_base,
+  search_set = search_set,
+  search_set_with_base = search_set_with_base,
+  search_remove = search_remove,
+  search_remove_with_base = search_remove_with_base,
+  search_remove_value = search_remove_value,
+  search_remove_value_with_base = search_remove_value_with_base,
+  search_has = search_has,
+  search_has_with_base = search_has_with_base,
+  search_has_value = search_has_value,
+  search_has_value_with_base = search_has_value_with_base,
+  search_get = search_get,
+  search_get_with_base = search_get_with_base,
+  search_get_all = search_get_all,
+  search_get_all_with_base = search_get_all_with_base,
+  search_size = search_size,
+  search_size_with_base = search_size_with_base,
+  search_pairs = search_pairs,
+  search_pairs_with_base = search_pairs_with_base,
+  search_ipairs = search_ipairs,
+  search_ipairs_with_base = search_ipairs_with_base,
+  search_each = search_each,
+  search_each_with_base = search_each_with_base,
+  search_each_key = search_each_key,
+  search_each_key_with_base = search_each_key_with_base,
+  search_each_value = search_each_value,
+  search_each_value_with_base = search_each_value_with_base,
 }
-
-
-do
-  local search = require("resty.ada.search")
-  for k, v in pairs(search) do
-    functions["search_" .. k]  = v
-  end
-end
 
 
 return functions

@@ -106,6 +106,7 @@ ada_owned_string ada_idna_to_ascii(const char* input, size_t length);
 
 ada_owned_string ada_search_params_to_string(ada_url_search_params result);
 size_t ada_search_params_size(ada_url_search_params result);
+void ada_search_params_sort(ada_url_search_params result);
 void ada_search_params_append(ada_url_search_params result, const char* key, size_t key_length, const char* value, size_t value_length);
 void ada_search_params_set(ada_url_search_params result, const char* key, size_t key_length, const char* value, size_t value_length);
 bool ada_search_params_has(ada_url_search_params result, const char* key, size_t key_length);

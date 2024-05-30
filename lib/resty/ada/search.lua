@@ -36,6 +36,18 @@ local function parse(search)
 end
 
 
+local function sort(search)
+  local s = new(search)
+  lib.ada_search_params_sort(s)
+  local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
+  return r
+end
+function mt:sort()
+  lib.ada_search_params_sort(self[1])
+  return self
+end
+
+
 local function append(search, key, value)
   local s = new(search)
   lib.ada_search_params_append(s, key, #key, value, #value)
@@ -251,6 +263,10 @@ function mt:each_value()
 end
 
 
+function mt:tostring()
+  local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(self[1]))
+  return r
+end
 function mt:__tostring()
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(self[1]))
   return r
@@ -265,6 +281,7 @@ end
 
 return {
   parse = parse,
+  sort = sort,
   append = append,
   set = set,
   remove = remove,
