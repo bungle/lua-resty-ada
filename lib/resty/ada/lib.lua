@@ -181,13 +181,11 @@ do
     ".dylib",
   }
 
-  local lib
-
   -- try to load ada library from package.cpath
   for _, library_name in ipairs(library_names) do
     for _, library_version in ipairs(library_versions) do
       for _, library_extension in ipairs(library_extensions) do
-        lib = load_lib_from_cpath(library_name .. library_version .. library_extension)
+        local lib = load_lib_from_cpath(library_name .. library_version .. library_extension)
         if lib then
           return lib
         end
@@ -198,11 +196,21 @@ do
   -- try to load ada library from normal system path
   for _, library_name in ipairs(library_names) do
     for _, library_version in ipairs(library_versions) do
-      lib = load_lib(library_name .. library_version)
+      local lib = load_lib(library_name .. library_version)
       if lib then
         return lib
       end
     end
+  end
+
+  -- a final check before we give up
+  local pok, lib = pcall(function()
+    if ffi.C.ada_parse then
+      return ffi.C
+    end
+  end)
+  if pok then
+    return lib
   end
 end
 
