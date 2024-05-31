@@ -677,7 +677,7 @@ end
 
 local function set_port_with_base(url, port)
   local u = new(url)
-  local port = port_to_string(port)
+  port = port_to_string(port)
   local ok = lib.ada_set_port(u, port, #port)
   if not ok then
     return nil, "unable to set port"
@@ -687,7 +687,7 @@ local function set_port_with_base(url, port)
 end
 local function set_port(url, port)
   local u = new(url)
-  local port = port_to_string(port)
+  port = port_to_string(port)
   local ok = lib.ada_set_port(u, port, #port)
   if not ok then
     return nil, "unable to set port"
@@ -696,7 +696,7 @@ local function set_port(url, port)
   return r
 end
 function mt:set_port(port)
-  local port = port_to_string(port)
+  port = port_to_string(port)
   local ok = lib.ada_set_port(self[1], port, #port)
   if not ok then
     return nil, "unable to set port"
@@ -732,20 +732,20 @@ function mt:set_pathname(pathname)
 end
 
 
-local function set_search_with_base(url, base, search)
+local function set_search_with_base(url, base, query)
   local u = new_with_base(url, base)
-  lib.ada_set_search(u, search, #search)
+  lib.ada_set_search(u, query, #query)
   local r = real_get_href(u)
   return r
 end
-local function set_search(url, search)
+local function set_search(url, query)
   local u = new(url)
-  lib.ada_set_search(u, search, #search)
+  lib.ada_set_search(u, query, #query)
   local r = real_get_href(u)
   return r
 end
-function mt:set_search(search)
-  lib.ada_set_search(self[1], search, #search)
+function mt:set_search(query)
+  lib.ada_set_search(self[1], query, #query)
   return self
 end
 

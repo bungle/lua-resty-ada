@@ -158,7 +158,8 @@ local load_lib_from_cpath do
       local file = open(file_path)
       if file ~= nil then
         close(file)
-        return load_lib(file_path)
+        local lib = load_lib(file_path)
+        return lib
       end
     end
   end
