@@ -1,3 +1,10 @@
+---
+-- Provides reusable utilities for `resty.ada`.
+--
+-- @local
+-- @module resty.ada.utils
+
+
 local lib = require("resty.ada.lib")
 local new_tab = require("table.new")
 

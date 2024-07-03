@@ -5,7 +5,7 @@
 
 ## Status
 
-This library is considered production ready.
+This library is considered production ready when 1.0.0 is released (not yet).
 
 
 ## Synopsis
@@ -31,12 +31,17 @@ print(ada.clear_port("https://www.7‑Eleven.com:1234/Home/../Privacy/Montréal"
 ```
 
 
+## API
+
+LDoc generated API docs can be viewed at [bungle.github.io/lua-resty-ada](https://bungle.github.io/lua-resty-ada/).
+
+
 # License
 
 `lua-resty-ada` uses two clause BSD license.
 
 ```
-Copyright (c) 2024 Aapo Talvensaari
+Copyright (c) 2024 Aapo Talvensaari, 2024 Guilherme Salazar
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

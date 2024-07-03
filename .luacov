@@ -1,5 +1,4 @@
 return {
-
   -- filename to store stats collected
   ["statsfile"] = "luacov.stats.out",
 
@@ -27,5 +26,4 @@ return {
     "luacov/stats$",
     "luacov/tick$",
   },
-
 }
