@@ -1,0 +1,839 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>LuaJIT FFI bindings to Ada — WHATWG-compliant and fast URL parser</title>
+    <link rel="stylesheet" href="../ldoc_new.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>resty.ada</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Has_Methods">Has Methods </a></li>
+<li><a href="#Get_Methods">Get Methods </a></li>
+<li><a href="#Set_Methods">Set Methods </a></li>
+<li><a href="#Other_Methods">Other Methods </a></li>
+<li><a href="#Meta_Methods">Meta Methods </a></li>
+<li><a href="#Remove_Methods">Remove Methods </a></li>
+<li><a href="#Iterate_Methods">Iterate Methods </a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/url.html">url</a></li>
+  <li><strong>search</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/resty.ada.html">resty.ada</a></li>
+  <li><a href="../modules/resty.ada.search.html">resty.ada.search</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>search</code></h1>
+<p>Ada URL search parameters</p>
+<p> See: <a href="https://url.spec.whatwg.org/#interface-urlsearchparams">https://url.spec.whatwg.org/#interface-urlsearchparams</a></p>
+
+
+<h2><a href="#Has_Methods">Has Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:has">search:has (key)</a></td>
+	<td class="summary">Checks whether the search has a key.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:has_value">search:has_value (key, value)</a></td>
+	<td class="summary">Checks whether the search has a key with a specific value.</td>
+	</tr>
+</table>
+<h2><a href="#Get_Methods">Get Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:get">search:get (key)</a></td>
+	<td class="summary">Get search parameter&rsquo;s value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:get_all">search:get_all (key)</a></td>
+	<td class="summary">Get all the search parameter&rsquo;s values.</td>
+	</tr>
+</table>
+<h2><a href="#Set_Methods">Set Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:set">search:set (key, value)</a></td>
+	<td class="summary">Set the search parameter&rsquo;s value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:append">search:append (key, value)</a></td>
+	<td class="summary">Append value to the the search parameter.</td>
+	</tr>
+</table>
+<h2><a href="#Other_Methods">Other Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:tostring">search:tostring ()</a></td>
+	<td class="summary">Return search parameters as a string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:sort">search:sort ()</a></td>
+	<td class="summary">Sort search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:size">search:size ()</a></td>
+	<td class="summary">Count search parameters.</td>
+	</tr>
+</table>
+<h2><a href="#Meta_Methods">Meta Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:__pairs">search:__pairs ()</a></td>
+	<td class="summary">Iterate over each key and value in search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:__pairs">search:__pairs ()</a></td>
+	<td class="summary">Iterate over each parameter in search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:__tostring">search:__tostring ()</a></td>
+	<td class="summary">Return search parameters as a string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:__len">search:__len ()</a></td>
+	<td class="summary">Count search parameters.</td>
+	</tr>
+</table>
+<h2><a href="#Remove_Methods">Remove Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:remove">search:remove (key)</a></td>
+	<td class="summary">Remove search parameter.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:remove_value">search:remove_value (key, value)</a></td>
+	<td class="summary">Remove search parameter&rsquo;s value.</td>
+	</tr>
+</table>
+<h2><a href="#Iterate_Methods">Iterate Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#search:each">search:each ()</a></td>
+	<td class="summary">Iterate over search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:each_key">search:each_key ()</a></td>
+	<td class="summary">Iterate over each key in search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:each_value">search:each_value ()</a></td>
+	<td class="summary">Iterate over each value in search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:pairs">search:pairs ()</a></td>
+	<td class="summary">Iterate over each key and value in search parameters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search:ipairs">search:ipairs ()</a></td>
+	<td class="summary">Iterate over each parameter in search parameters.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Has_Methods"></a>Has Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:has"></a>
+    <strong>search:has (key)</strong>
+    </dt>
+    <dd>
+    Checks whether the search has a key. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if search has the key, otherwise <code>false</code>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">has</span>(<span class="string">"a"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:has_value"></a>
+    <strong>search:has_value (key, value)</strong>
+    </dt>
+    <dd>
+    Checks whether the search has a key with a specific value. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name to check
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter value to check
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if search has the key with the value, otherwise <code>false</code>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">has_value</span>(<span class="string">"a"</span>, <span class="string">"b"</span>)</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Get_Methods"></a>Get Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:get"></a>
+    <strong>search:get (key)</strong>
+    </dt>
+    <dd>
+    Get search parameter&rsquo;s value. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-get">https://url.spec.whatwg.org/#dom-urlsearchparams-get</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
+        parameter value or <code>nil</code>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">get</span>(<span class="string">"a"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:get_all"></a>
+    <strong>search:get_all (key)</strong>
+    </dt>
+    <dd>
+    Get all the search parameter&rsquo;s values. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-getall">https://url.spec.whatwg.org/#dom-urlsearchparams-getall</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        array of all the values (or an empty array)
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">get_all</span>(<span class="string">"a"</span>)</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Set_Methods"></a>Set Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:set"></a>
+    <strong>search:set (key, value)</strong>
+    </dt>
+    <dd>
+    Set the search parameter&rsquo;s value. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-set">https://url.spec.whatwg.org/#dom-urlsearchparams-set</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/search.html#">search</a></span>
+        self
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">set</span>(<span class="string">"a"</span>, <span class="string">"g"</span>):<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:append"></a>
+    <strong>search:append (key, value)</strong>
+    </dt>
+    <dd>
+    Append value to the the search parameter. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-append">https://url.spec.whatwg.org/#dom-urlsearchparams-append</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/search.html#">search</a></span>
+        self
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">append</span>(<span class="string">"a"</span>, <span class="string">"g"</span>):<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Other_Methods"></a>Other Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:tostring"></a>
+    <strong>search:tostring ()</strong>
+    </dt>
+    <dd>
+    Return search parameters as a string. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior">https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior</a>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        string presentation of the search parameters
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:sort"></a>
+    <strong>search:sort ()</strong>
+    </dt>
+    <dd>
+    Sort search parameters. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-sort">https://url.spec.whatwg.org/#dom-urlsearchparams-sort</a>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/search.html#">search</a></span>
+        self
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"e=f&amp;c=d&amp;a=b"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">sort</span>():<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:size"></a>
+    <strong>search:size ()</strong>
+    </dt>
+    <dd>
+    Count search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        search parameters count
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">size</span>()</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Meta_Methods"></a>Meta Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:__pairs"></a>
+    <strong>search:__pairs ()</strong>
+    </dt>
+    <dd>
+    Iterate over each key and value in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> key, value <span class="keyword">in</span> <span class="global">pairs</span>(search) <span class="keyword">do</span>
+  <span class="global">print</span>(key, <span class="string">" = "</span>, value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:__pairs"></a>
+    <strong>search:__pairs ()</strong>
+    </dt>
+    <dd>
+    Iterate over each parameter in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> i, param <span class="keyword">in</span> <span class="global">ipairs</span>(search) <span class="keyword">do</span>
+  <span class="global">print</span>(i, <span class="string">". "</span>, param.key, <span class="string">" = "</span>, param.value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:__tostring"></a>
+    <strong>search:__tostring ()</strong>
+    </dt>
+    <dd>
+    Return search parameters as a string. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior">https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior</a>
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        string presentation of the search parameters
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = <span class="global">tostring</span>(search)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:__len"></a>
+    <strong>search:__len ()</strong>
+    </dt>
+    <dd>
+    Count search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        search parameters count
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = #search</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Remove_Methods"></a>Remove Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:remove"></a>
+    <strong>search:remove (key)</strong>
+    </dt>
+    <dd>
+    Remove search parameter. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/search.html#">search</a></span>
+        self
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">remove</span>(<span class="string">"a"</span>):<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:remove_value"></a>
+    <strong>search:remove_value (key, value)</strong>
+    </dt>
+    <dd>
+    Remove search parameter&rsquo;s value. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter name
+        </li>
+        <li><span class="parameter">value</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameter&rsquo;s value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="../classes/search.html#">search</a></span>
+        self
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">local</span> result = search:<span class="function-name">remove_value</span>(<span class="string">"a"</span>, <span class="string">"b"</span>):<span class="global">tostring</span>()</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Iterate_Methods"></a>Iterate Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "search:each"></a>
+    <strong>search:each ()</strong>
+    </dt>
+    <dd>
+    Iterate over search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> param <span class="keyword">in</span> search:<span class="function-name">each</span>() <span class="keyword">do</span>
+  <span class="global">print</span>(param.key, <span class="string">" = "</span>, param.value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:each_key"></a>
+    <strong>search:each_key ()</strong>
+    </dt>
+    <dd>
+    Iterate over each key in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> key <span class="keyword">in</span> search:<span class="function-name">each_key</span>() <span class="keyword">do</span>
+  <span class="global">print</span>(<span class="string">"key: "</span>, key)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:each_value"></a>
+    <strong>search:each_value ()</strong>
+    </dt>
+    <dd>
+    Iterate over each value in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> value <span class="keyword">in</span> search:<span class="function-name">each_value</span>() <span class="keyword">do</span>
+  <span class="global">print</span>(<span class="string">"value: "</span>, value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:pairs"></a>
+    <strong>search:pairs ()</strong>
+    </dt>
+    <dd>
+    Iterate over each key and value in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> key, value <span class="keyword">in</span> search:<span class="global">pairs</span>() <span class="keyword">do</span>
+  <span class="global">print</span>(key, <span class="string">" = "</span>, value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search:ipairs"></a>
+    <strong>search:ipairs ()</strong>
+    </dt>
+    <dd>
+    Iterate over each parameter in search parameters.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">function</span></span>
+        iterator function</li>
+        <li>
+           <span class="types"><span class="type">cdata</span></span>
+        state</li>
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)
+<span class="keyword">for</span> i, param <span class="keyword">in</span> search:<span class="global">ipairs</span>() <span class="keyword">do</span>
+  <span class="global">print</span>(param.key, <span class="string">" = "</span>, param.value)
+<span class="keyword">end</span></pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2024-07-05 00:34:40 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
