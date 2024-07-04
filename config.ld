@@ -1,10 +1,11 @@
 project = "resty.ada"
-description = "Session Library for OpenResty"
+description = "WHATWG-compliant and fast URL parser"
 full_description = "`lua-resty-ada` implements a LuaJIT FFI bindings to Ada — WHATWG-compliant and fast URL parser"
 title = "LuaJIT FFI bindings to Ada — WHATWG-compliant and fast URL parser"
 dir = "docs"
 use_markdown_titles = true
 package = "ada"
 format = "discount"
-sort_modules=true
 file = "./lib/resty"
+style = "!new"
+multimodule = true

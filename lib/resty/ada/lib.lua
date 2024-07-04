@@ -1,3 +1,10 @@
+---
+-- Provides Ada FFI definitions and library loading functionality.
+--
+-- @local
+-- @module resty.ada.lib
+
+
 local ffi = require("ffi")
 
 
