@@ -174,6 +174,10 @@
 <h2><a href="#Set_Methods">Set Methods </a></h2>
 <table class="function_list">
 	<tr>
+	<td class="name" nowrap><a href="#url:set_href">url:set_href (href)</a></td>
+	<td class="summary">Sets HREF (aka url) to the URL.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#url:set_protocol">url:set_protocol (protocol)</a></td>
 	<td class="summary">Sets protocol to the URL.</td>
 	</tr>
@@ -202,7 +206,7 @@
 	<td class="summary">Sets path to the URL.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#url:set_search">url:set_search (search)</a></td>
+	<td class="name" nowrap><a href="#url:set_search">url:set_search (query)</a></td>
 	<td class="summary">Sets search (query) to the URL.</td>
 	</tr>
 	<tr>
@@ -1025,6 +1029,45 @@
 
     <dl class="function">
     <dt>
+    <a name = "url:set_href"></a>
+    <strong>url:set_href (href)</strong>
+    </dt>
+    <dd>
+    Sets HREF (aka url) to the URL. </p>
+
+<p> See: <a href="https://url.spec.whatwg.org/#dom-url-href">https://url.spec.whatwg.org/#dom-url-href</a>
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">href</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         the HREF to set to the URL
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="../classes/url.html#">url</a> or <span class="type">nil</span></span>
+        self (except on errors <code>nil</code>)</li>
+        <li>
+           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        error message</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    error when href is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> url = <span class="global">require</span>(<span class="string">"resty.ada"</span>).<span class="function-name">parse</span>(<span class="string">"https://user:pass@host:1234/path?search#hash"</span>)
+<span class="keyword">local</span> res = url:<span class="function-name">set_protocol</span>(<span class="string">"wss"</span>):<span class="function-name">get_href</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
     <a name = "url:set_protocol"></a>
     <strong>url:set_protocol (protocol)</strong>
     </dt>
@@ -1052,6 +1095,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when protocol is not a string
 
 
     <h3>Usage:</h3>
@@ -1089,6 +1134,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when username is not a string
 
 
     <h3>Usage:</h3>
@@ -1126,6 +1173,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when password is not a string
 
 
     <h3>Usage:</h3>
@@ -1163,6 +1212,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when host is not a string
 
 
     <h3>Usage:</h3>
@@ -1200,6 +1251,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when hostname is not a string
 
 
     <h3>Usage:</h3>
@@ -1237,6 +1290,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when port is not a number or a string
 
 
     <h3>Usage:</h3>
@@ -1274,6 +1329,8 @@
         error message</li>
     </ol>
 
+    <h3>Raises:</h3>
+    error when pathname is not a string
 
 
     <h3>Usage:</h3>
@@ -1285,7 +1342,7 @@
 </dd>
     <dt>
     <a name = "url:set_search"></a>
-    <strong>url:set_search (search)</strong>
+    <strong>url:set_search (query)</strong>
     </dt>
     <dd>
     Sets search (query) to the URL. </p>
@@ -1295,7 +1352,7 @@
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">search</span>
+        <li><span class="parameter">query</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          the query string to set to the URL
         </li>
@@ -1308,6 +1365,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when query is not a string
 
 
     <h3>Usage:</h3>
@@ -1342,6 +1401,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when hash is not a string
 
 
     <h3>Usage:</h3>
@@ -1488,6 +1549,8 @@
         <code>true</code> if search has the key, otherwise <code>false</code>
     </ol>
 
+    <h3>Raises:</h3>
+    error when key is not a string
 
 
     <h3>Usage:</h3>
@@ -1524,6 +1587,8 @@
         <code>true</code> if search has the key with the value, otherwise <code>false</code>
     </ol>
 
+    <h3>Raises:</h3>
+    error when key or value is not a string
 
 
     <h3>Usage:</h3>
@@ -1556,6 +1621,8 @@
         parameter value or <code>nil</code>
     </ol>
 
+    <h3>Raises:</h3>
+    error when key is not a string
 
 
     <h3>Usage:</h3>
@@ -1588,6 +1655,8 @@
         array of all the values (or an empty array)
     </ol>
 
+    <h3>Raises:</h3>
+    error when key is not a string
 
 
     <h3>Usage:</h3>
@@ -1624,6 +1693,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when key or value is not a string
 
 
     <h3>Usage:</h3>
@@ -1660,6 +1731,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when key or value is not a string
 
 
     <h3>Usage:</h3>
@@ -1692,6 +1765,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when key is not a string
 
 
     <h3>Usage:</h3>
@@ -1728,6 +1803,8 @@
         self
     </ol>
 
+    <h3>Raises:</h3>
+    error when key or value is not a string
 
 
     <h3>Usage:</h3>
@@ -2054,7 +2131,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-07-05 00:34:40 </i>
+<i style="float:right;">Last updated 2024-07-05 10:29:10 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

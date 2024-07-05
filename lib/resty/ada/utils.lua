@@ -14,9 +14,6 @@ local ffi_gc = ffi.gc
 local ffi_str = ffi.string
 
 
-local fmt = string.format
-local type = type
-local tostring = tostring
 local tonumber = tonumber
 
 
@@ -51,20 +48,8 @@ local function ada_owned_string_to_lua(ada_owned_string)
 end
 
 
-local function port_to_string(port)
-  local t = type(port)
-  if t == "number" then
-    port = fmt("%d", port)
-  elseif t ~= "string" then
-    port = tostring(port)
-  end
-  return port
-end
-
-
 return {
   ada_string_to_lua = ada_string_to_lua,
   ada_strings_to_lua = ada_strings_to_lua,
   ada_owned_string_to_lua = ada_owned_string_to_lua,
-  port_to_string = port_to_string,
 }

@@ -13,13 +13,14 @@ local search = require("resty.ada.search")
 
 local ada_string_to_lua = utils.ada_string_to_lua
 local ada_owned_string_to_lua = utils.ada_owned_string_to_lua
-local port_to_string = utils.port_to_string
+
 
 
 local ffi = require("ffi")
 local ffi_gc = ffi.gc
 
 
+local fmt = string.format
 local type = type
 local assert = assert
 local tonumber = tonumber
@@ -30,27 +31,6 @@ local _OMITTED = 0xffffffff
 
 
 local _VERSION = "1.0.0"
-
-
-local function new(url)
-  assert(type(url) == "string", "invalid url")
-  local u = ffi_gc(lib.ada_parse(url, #url), lib.ada_free)
-  if not lib.ada_is_valid(u) then
-    return nil, "invalid url"
-  end
-  return u
-end
-
-
-local function new_with_base(url, base)
-  assert(type(url) == "string", "invalid url")
-  assert(type(base) == "string", "invalid base")
-  local u = ffi_gc(lib.ada_parse_with_base(url, #url, base, #base), lib.ada_free)
-  if not lib.ada_is_valid(u) then
-    return nil, "invalid url or base"
-  end
-  return u
-end
 
 
 local function parse_component(c, raw)
@@ -67,26 +47,6 @@ local mt = {
 
 
 mt.__index = mt
-
-
-local function parse(url)
-  local u, err = new(url)
-  if not u then
-    return nil, err
-  end
-  local self = setmetatable({ u }, mt)
-  return self
-end
-
-
-local function parse_with_base(url, base)
-  local u, err = new_with_base(url, base)
-  if not u then
-    return nil, err
-  end
-  local self = setmetatable({ u }, mt)
-  return self
-end
 
 
 ---
@@ -558,7 +518,22 @@ end
 -- @section set-methods
 
 
+---
+-- Sets HREF (aka url) to the URL.
+--
+-- See: <https://url.spec.whatwg.org/#dom-url-href>
+--
+-- @function set_href
+-- @tparam string href the HREF to set to the URL
+-- @treturn url|nil self (except on errors `nil`)
+-- @treturn nil|string error message
+-- @raise error when href is not a string
+--
+-- @usage
+-- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
+-- local res = url:set_protocol("wss"):get_href()
 function mt:set_href(href)
+  assert(type(href) == "string", "invalid href")
   local ok = lib.ada_set_href(self[1], href, #href)
   if not ok then
     return nil, "unable to set href"
@@ -576,11 +551,13 @@ end
 -- @tparam string protocol the protocol to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when protocol is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_protocol("wss"):get_href()
 function mt:set_protocol(protocol)
+  assert(type(protocol) == "string", "invalid protocol")
   local ok = lib.ada_set_protocol(self[1], protocol, #protocol)
   if not ok then
     return nil, "unable to set protocol"
@@ -598,11 +575,13 @@ end
 -- @tparam string username the username to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when username is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_username("guest"):get_href()
 function mt:set_username(username)
+  assert(type(username) == "string", "invalid username")
   local ok = lib.ada_set_username(self[1], username, #username)
   if not ok then
     return nil, "unable to set username"
@@ -620,11 +599,13 @@ end
 -- @tparam string password the password to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when password is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:ada_set_password("secret"):get_href()
 function mt:set_password(password)
+  assert(type(password) == "string", "invalid password")
   local ok = lib.ada_set_password(self[1], password, #password)
   if not ok then
     return nil, "unable to set password"
@@ -642,11 +623,13 @@ end
 -- @tparam string host the host to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when host is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_host("test:4321"):get_href()
 function mt:set_host(host)
+  assert(type(host) == "string", "invalid host")
   local ok = lib.ada_set_host(self[1], host, #host)
   if not ok then
     return nil, "unable to set host"
@@ -664,11 +647,13 @@ end
 -- @tparam string hostname the host (name only) to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when hostname is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_hostname("test"):get_href()
 function mt:set_hostname(hostname)
+  assert(type(hostname) == "string", "invalid hostname")
   local ok = lib.ada_set_hostname(self[1], hostname, #hostname)
   if not ok then
     return nil, "unable to set hostname"
@@ -686,12 +671,18 @@ end
 -- @tparam number|string port the port to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when port is not a number or a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_port(4321):get_href()
 function mt:set_port(port)
-  port = port_to_string(port)
+  local t = type(port)
+  if t == "number" then
+    port = fmt("%d", port)
+  else
+    assert(t == "string", "invalid port")
+  end
   local ok = lib.ada_set_port(self[1], port, #port)
   if not ok then
     return nil, "unable to set port"
@@ -709,11 +700,13 @@ end
 -- @tparam string path the path to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
 -- @treturn nil|string error message
+-- @raise error when pathname is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_pathname("foo"):get_href()
 function mt:set_pathname(pathname)
+  assert(type(pathname) == "string", "invalid pathname")
   local ok = lib.ada_set_pathname(self[1], pathname, #pathname)
   if not ok then
     return nil, "unable to set pathname"
@@ -728,13 +721,15 @@ end
 -- See: <https://url.spec.whatwg.org/#dom-url-search>
 --
 -- @function set_search
--- @tparam string search the query string to set to the URL
+-- @tparam string query the query string to set to the URL
 -- @treturn url self
+-- @raise error when query is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_search("q=1&done"):get_href()
 function mt:set_search(query)
+  assert(type(query) == "string", "invalid query")
   lib.ada_set_search(self[1], query, #query)
   return self
 end
@@ -748,11 +743,13 @@ end
 -- @function set_hash
 -- @tparam string hash the fragment to set to the URL
 -- @treturn url self
+-- @raise error when hash is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:set_hash("home"):get_href()
 function mt:set_hash(hash)
+  assert(type(hash) == "string", "invalid hash")
   lib.ada_set_hash(self[1], hash, #hash)
   return self
 end
@@ -840,11 +837,13 @@ end
 -- @function search_has
 -- @tparam string key search parameter name to check
 -- @treturn boolean `true` if search has the key, otherwise `false`
+-- @raise error when key is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_has("a")
 function mt:search_has(key)
+  assert(type(key) == "string", "invalid key")
   local r = search.has(self:get_search() or "", key)
   return r
 end
@@ -857,11 +856,14 @@ end
 -- @tparam string key search parameter name to check
 -- @tparam string value search parameter value to check
 -- @treturn boolean `true` if search has the key with the value, otherwise `false`
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_has_value("a", "b")
 function mt:search_has_value(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local r = search.has_value(self:get_search() or "", key, value)
   return r
 end
@@ -873,11 +875,13 @@ end
 -- @function search_get
 -- @tparam string key search parameter name
 -- @treturn string|nil parameter value or `nil`
+-- @raise error when key is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_get("a")
 function mt:search_get(key)
+  assert(type(key) == "string", "invalid key")
   local r = search.get(self:get_search() or "", key)
   return r
 end
@@ -889,11 +893,13 @@ end
 -- @function search_get_all
 -- @tparam string key search parameter name
 -- @treturn table array of all the values (or an empty array)
+-- @raise error when key is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_get_all("a")
 function mt:search_get_all(key)
+  assert(type(key) == "string", "invalid key")
   local r = search.get_all(self:get_search() or "", key)
   return r
 end
@@ -905,11 +911,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn url self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_set("a", "g"):get_href()
 function mt:search_set(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   self:set_search(search.set(self:get_search() or "", key, value))
   return self
 end
@@ -922,11 +931,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn url self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_append("a", "g"):get_href()
 function mt:search_append(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   self:set_search(search.append(self:get_search() or "", key, value))
   return self
 end
@@ -938,11 +950,13 @@ end
 -- @function search_remove
 -- @tparam string key search parameter name
 -- @treturn url self
+-- @raise error when key is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_remove("a"):get_href()
 function mt:search_remove(key)
+  assert(type(key) == "string", "invalid key")
   self:set_search(search.remove(self:get_search() or "", key))
   return self
 end
@@ -955,11 +969,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter's value
 -- @treturn url self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/?a=b&c=d&e=f")
 -- local res = url:search_remove_value("a", "b"):get_href()
 function mt:search_remove_value(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   self:set_search(search.remove_value(self:get_search() or "", key, value))
   return self
 end
@@ -1167,12 +1184,21 @@ end
 -- @tparam string url url to parse
 -- @treturn url|nil Ada URL instance
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see parse_with_base
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local url, err = ada.parse("https://user:pass@host:1234/path?search#hash")
+local function parse(url)
+  assert(type(url) == "string", "invalid url")
+  local u = ffi_gc(lib.ada_parse(url, #url), lib.ada_free)
+  if not lib.ada_is_valid(u) then
+    return nil, "invalid url"
+  end
+  local self = setmetatable({ u }, mt)
+  return self
+end
 
 
 ---
@@ -1183,13 +1209,23 @@ end
 -- @tparam string base base url to parse
 -- @treturn url|nil Ada URL instance
 -- @treturn nil|string error message
--- @raise error when URL or base is not a string
+-- @raise error when url or base is not a string
 -- @see parse
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local url, err = ada.parse_with_base("/path?search#hash",
 --                                      "https://user:pass@host:1234")
+local function parse_with_base(url, base)
+  assert(type(url) == "string", "invalid url")
+  assert(type(base) == "string", "invalid base")
+  local u = ffi_gc(lib.ada_parse_with_base(url, #url, base, #base), lib.ada_free)
+  if not lib.ada_is_valid(u) then
+    return nil, "invalid url or base"
+  end
+  local self = setmetatable({ u }, mt)
+  return self
+end
 
 
 ---
@@ -1249,12 +1285,14 @@ end
 -- @function idna_to_ascii
 -- @tparam string domain URL (or part of it) to parse
 -- @treturn string|nil ascii domain
+-- @raise error when domain not a string
 -- @see idna_to_unicode
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.idna_to_ascii("www.7‑Eleven.com") -- www.xn--7eleven-506c.com
 local function idna_to_ascii(domain)
+  assert(type(domain) == "string", "invalid domain")
   local r = ada_owned_string_to_lua(lib.ada_idna_to_ascii(domain, #domain))
   return r
 end
@@ -1268,12 +1306,14 @@ end
 -- @function idna_to_unicode
 -- @tparam string domain URL (or part of it) to parse
 -- @treturn string|nil (unicode) domain
+-- @raise error when domain not a string
 -- @see idna_to_ascii
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.idna_to_unicode("www.xn--7eleven-506c.com") -- www.7‑Eleven.com
 local function idna_to_unicode(domain)
+  assert(type(domain) == "string", "invalid domain")
   local r = ada_owned_string_to_lua(lib.ada_idna_to_unicode(domain, #domain))
   return r
 end
@@ -1293,7 +1333,6 @@ end
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL can be parsed, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
 -- @see can_parse_with_base
 -- @see is_valid
 --
@@ -1315,7 +1354,6 @@ end
 -- @tparam string base base url to check
 -- @treturn boolean|nil `true` if URL can be parsed, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
 -- @see can_parse
 -- @see is_valid
 --
@@ -1404,7 +1442,7 @@ end
 -- @tparam string url URL (or part of it) to validate
 -- @treturn boolean|nil `true` if URL is valid, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see can_parse
 -- @see can_parse_with_base
 --
@@ -1428,7 +1466,7 @@ local is_valid = gen_static_get_call(mt.is_valid)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has credentials, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_non_empty_username
 -- @see get_username
 -- @see set_username
@@ -1447,7 +1485,7 @@ local has_credentials = gen_static_get_call(mt.has_credentials)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a non-empty username, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see get_username
 -- @see set_username
 -- @see has_credentials
@@ -1465,7 +1503,7 @@ local has_non_empty_username = gen_static_get_call(mt.has_non_empty_username)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a password, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_non_empty_password
 -- @see get_password
 -- @see set_password
@@ -1484,7 +1522,7 @@ local has_password = gen_static_get_call(mt.has_password)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a non-empty password, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_password
 -- @see get_password
 -- @see set_password
@@ -1503,7 +1541,7 @@ local has_non_empty_password = gen_static_get_call(mt.has_non_empty_password)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a hostname (included an empty host), otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_empty_hostname
 -- @see get_hostname
 -- @see set_hostname
@@ -1521,7 +1559,7 @@ local has_hostname = gen_static_get_call(mt.has_hostname)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has an empty hostname, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_hostname
 -- @see get_hostname
 -- @see set_hostname
@@ -1539,7 +1577,7 @@ local has_empty_hostname = gen_static_get_call(mt.has_empty_hostname)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a (non default) port, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see get_port
 -- @see set_port
 -- @see clear_port
@@ -1557,7 +1595,7 @@ local has_port = gen_static_get_call(mt.has_port)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a search, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see get_search
 -- @see set_search
 -- @see clear_search
@@ -1575,7 +1613,7 @@ local has_search = gen_static_get_call(mt.has_search)
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean|nil `true` if URL has a hash, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see get_hash
 -- @see set_hash
 -- @see clear_hash
@@ -1627,7 +1665,7 @@ local has_hash = gen_static_get_call(mt.has_hash)
 -- @tparam string url URL (or part of it) to from which the URL component positions are extracted
 -- @treturn table|nil table of URL components (or their positions) (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1645,7 +1683,7 @@ local get_components = gen_static_get_call(mt.get_components)
 -- @tparam string url URL (or part of it) from which to get href
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1662,7 +1700,7 @@ local get_href = gen_static_get_call(mt.get_href)
 -- @tparam string url URL (or part of it) from which to extract the protocol
 -- @treturn string|nil protocol part of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see set_protocol
 --
 -- @usage
@@ -1690,7 +1728,7 @@ local get_protocol = gen_static_get_call(mt.get_protocol)
 -- @tparam string url URL (or part of it) from which to get scheme type
 -- @treturn number|nil scheme type of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1707,7 +1745,7 @@ local get_scheme_type = gen_static_get_call(mt.get_scheme_type)
 -- @tparam string url URL (or part of it) from which to get origin
 -- @treturn string|nil origin of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1724,7 +1762,7 @@ local get_origin = gen_static_get_call(mt.get_origin)
 -- @tparam string url URL (or part of it) from which to get username
 -- @treturn string|nil URL's username (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_non_empty_username
 -- @see set_username
 -- @see has_credentials
@@ -1744,7 +1782,7 @@ local get_username = gen_static_get_call(mt.get_username)
 -- @tparam string url URL (or part of it) from which to get password
 -- @treturn string|nil URL's password (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_password
 -- @see has_non_empty_password
 -- @see set_password
@@ -1766,7 +1804,7 @@ local get_password = gen_static_get_call(mt.get_password)
 -- @tparam string url URL (or part of it) from which to get host
 -- @treturn string|nil URL's host (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see set_host
 --
 -- @usage
@@ -1786,7 +1824,7 @@ local get_host = gen_static_get_call(mt.get_host)
 -- @tparam string url URL (or part of it) from which to get host (name only)
 -- @treturn string|nil URL's host (name only) (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_hostname
 -- @see has_empty_hostname
 -- @see set_hostname
@@ -1810,7 +1848,7 @@ local get_hostname = gen_static_get_call(mt.get_hostname)
 -- @tparam string url URL (or part of it) from which to get scheme type
 -- @treturn number|nil scheme type of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1827,7 +1865,7 @@ local get_host_type = gen_static_get_call(mt.get_host_type)
 -- @tparam string url URL (or part of it) from which to get port
 -- @treturn number|string|nil URL's port (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_port
 -- @see set_port
 -- @see clear_port
@@ -1847,7 +1885,7 @@ local get_port = gen_static_get_call(mt.get_port)
 -- @tparam string url URL (or part of it) from which to get path
 -- @treturn string|nil URL's path (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see set_pathname
 --
 -- @usage
@@ -1867,7 +1905,7 @@ local get_pathname = gen_static_get_call(mt.get_pathname)
 -- @tparam string url URL (or part of it) from which to get query
 -- @treturn string|nil URL's query (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_search
 -- @see set_search
 -- @see clear_search
@@ -1889,7 +1927,7 @@ local get_search = gen_static_get_call(mt.get_search)
 -- @tparam string url URL (or part of it) from which to get fragment
 -- @treturn string|nil URL's fragment (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_hash
 -- @see set_hash
 -- @see clear_hash
@@ -1915,7 +1953,7 @@ local get_hash = gen_static_get_call(mt.get_hash)
 -- @tparam string protocol the protocol to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or protocol is not a string
 -- @see get_protocol
 --
 -- @usage
@@ -1934,7 +1972,7 @@ local set_protocol = gen_static_set_call(mt.set_protocol)
 -- @tparam string username the username to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or username is not a string
 -- @see has_non_empty_username
 -- @see get_username
 -- @see has_credentials
@@ -1955,7 +1993,7 @@ local set_username = gen_static_set_call(mt.set_username)
 -- @tparam string password the password to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or password is not a string
 -- @see has_password
 -- @see has_non_empty_password
 -- @see get_password
@@ -1977,7 +2015,7 @@ local set_password = gen_static_set_call(mt.set_password)
 -- @tparam string host the host to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or host is not a string
 -- @see get_host
 --
 -- @usage
@@ -1996,7 +2034,7 @@ local set_host = gen_static_set_call(mt.set_host)
 -- @tparam string hostname the host (name only) to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or hostname is not a string
 -- @see has_hostname
 -- @see has_empty_hostname
 -- @see get_hostname
@@ -2017,7 +2055,7 @@ local set_hostname = gen_static_set_call(mt.set_hostname)
 -- @tparam number|string port the port to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string or port is not a number or a string
 -- @see has_port
 -- @see get_port
 -- @see clear_port
@@ -2038,7 +2076,7 @@ local set_port = gen_static_set_call(mt.set_port)
 -- @tparam string path the path to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or pathname is not a string
 -- @see get_pathname
 --
 -- @usage
@@ -2057,7 +2095,7 @@ local set_pathname = gen_static_set_call(mt.set_pathname)
 -- @tparam string search the query string to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or search is not a string
 -- @see has_search
 -- @see get_search
 -- @see clear_search
@@ -2078,7 +2116,7 @@ local set_search = gen_static_set_call(mt.set_search)
 -- @tparam string hash the fragment to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or hash is not a string
 -- @see has_hash
 -- @see get_hash
 -- @see clear_hash
@@ -2103,7 +2141,7 @@ local set_hash = gen_static_set_call(mt.set_hash)
 -- @tparam string url URL (or part of it) from which to clear the port
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_port
 -- @see get_port
 -- @see set_port
@@ -2123,7 +2161,7 @@ local clear_port = gen_static_clear_call(mt.clear_port)
 -- @tparam string url URL (or part of it) from which to clear the query string
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_search
 -- @see get_search
 -- @see set_search
@@ -2143,7 +2181,7 @@ local clear_search = gen_static_clear_call(mt.clear_search)
 -- @tparam string url URL (or part of it) from which to clear the fragment
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 -- @see has_hash
 -- @see get_hash
 -- @see set_hash
@@ -2166,11 +2204,12 @@ local clear_hash = gen_static_clear_call(mt.clear_hash)
 -- @tparam string url url (with search) to parse
 -- @treturn search|nil Ada URL Search instance (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 local function search_parse(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2188,12 +2227,14 @@ end
 -- @tparam string key search parameter name to check
 -- @treturn boolean `true` if search has the key, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or key is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_has("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_has(url, key)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2212,12 +2253,15 @@ end
 -- @tparam string value search parameter value to check
 -- @treturn boolean `true` if search has the key with the value, otherwise `false` (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url, key or value is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_has_value("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "b")
 local function search_has_value(url, key, value)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2235,12 +2279,14 @@ end
 -- @tparam string key search parameter name
 -- @treturn string|nil parameter value or `nil` (and on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or key is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_get("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_get(url, key)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2258,12 +2304,14 @@ end
 -- @tparam string key search parameter name
 -- @treturn table|nil array of all the values (or an empty array) (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or key is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_get_all("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_get_all(url, key)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2282,12 +2330,15 @@ end
 -- @tparam string value search parameter value
 -- @treturn string|nil string presentation of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url, key or value is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_set("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "g")
 local function search_set(url, key, value)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local u, err = static_prepare(url)
   if err then
     return nil, err
@@ -2306,12 +2357,15 @@ end
 -- @tparam string value search parameter value
 -- @treturn string|nil string presentation of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url, key or value is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_append("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "g")
 local function search_append(url, key, value)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local u, err = static_prepare(url)
   if err then
     return nil, err
@@ -2329,12 +2383,14 @@ end
 -- @tparam string key search parameter name
 -- @treturn string|nil string presentation of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url or key is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_remove("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_remove(url, key)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
   local u, err = static_prepare(url)
   if err then
     return nil, err
@@ -2353,12 +2409,15 @@ end
 -- @tparam string value search parameter's value
 -- @treturn string|nil string presentation of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url, key or value is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_remove_value("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "b")
 local function search_remove_value(url, key, value)
+  assert(type(url) == "string", "invalid url")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local u, err = static_prepare(url)
   if err then
     return nil, err
@@ -2375,12 +2434,13 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn string|nil string presentation of the URL (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_sort("https://user:pass@host:1234/?e=f&c=d&a=b")
 local function search_sort(url)
+  assert(type(url) == "string", "invalid url")
   local u, err = static_prepare(url)
   if err then
     return nil, err
@@ -2397,12 +2457,13 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn number|nil search parameters count (except on errors `nil`)
 -- @treturn nil|string error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.search_size("https://user:pass@host:1234/?a=b&c=d&e=f")
 local function search_size(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2419,7 +2480,7 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn function iterator function (except on errors `nil`)
 -- @treturn cdata|string state or error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -2427,6 +2488,7 @@ end
 --   print(param.key, " = ", param.value)
 -- end
 local function search_each(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2443,7 +2505,7 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn function iterator function (except on errors `nil`)
 -- @treturn cdata|string state or error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -2451,6 +2513,7 @@ end
 --   print("key: ", key)
 -- end
 local function search_each_key(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2467,7 +2530,7 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn function iterator function (except on errors `nil`)
 -- @treturn cdata|string state or error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -2475,6 +2538,7 @@ end
 --   print("value: ", value)
 -- end
 local function search_each_value(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2491,7 +2555,7 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn function iterator function (except on errors `nil`)
 -- @treturn cdata|string state or error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -2499,6 +2563,7 @@ end
 --   print(key, " = ", value)
 -- end
 local function search_pairs(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2515,7 +2580,7 @@ end
 -- @tparam string url url (with search) to parse
 -- @treturn function iterator function (except on errors `nil`)
 -- @treturn cdata|string state or error message
--- @raise error when URL is not a string
+-- @raise error when url is not a string
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -2523,6 +2588,7 @@ end
 --   print(i, ". ", param.key, " = ", param.value)
 -- end
 local function search_ipairs(url)
+  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err

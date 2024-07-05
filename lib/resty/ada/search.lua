@@ -24,13 +24,6 @@ local tonumber = tonumber
 local setmetatable = setmetatable
 
 
-local function new(search)
-  assert(type(search) == "string", "invalid search")
-  local s = ffi_gc(lib.ada_parse_search_params(search, #search), lib.ada_free_search_params)
-  return s
-end
-
-
 local function each_iter(entries_iterator)
   if lib.ada_search_params_entries_iter_has_next(entries_iterator) then
     local pair = lib.ada_search_params_entries_iter_next(entries_iterator)
@@ -92,14 +85,6 @@ local mt = {}
 mt.__index = mt
 
 
-
-local function parse(search)
-  local s = new(search)
-  local self = setmetatable({ s }, mt)
-  return self
-end
-
-
 ---
 -- Has Methods
 -- @section has-methods
@@ -113,11 +98,13 @@ end
 -- @function has
 -- @tparam string key search parameter name to check
 -- @treturn boolean `true` if search has the key, otherwise `false`
+-- @raise error when key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:has("a")
 function mt:has(key)
+  assert(type(key) == "string", "invalid key")
   local r = lib.ada_search_params_has(self[1], key, #key)
   return r
 end
@@ -132,11 +119,14 @@ end
 -- @tparam string key search parameter name to check
 -- @tparam string value search parameter value to check
 -- @treturn boolean `true` if search has the key with the value, otherwise `false`
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:has_value("a", "b")
 function mt:has_value(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local r = lib.ada_search_params_has_value(self[1], key, #key, value, #value)
   return r
 end
@@ -155,11 +145,13 @@ end
 -- @function get
 -- @tparam string key search parameter name
 -- @treturn string|nil parameter value or `nil`
+-- @raise error when key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:get("a")
 function mt:get(key)
+  assert(type(key) == "string", "invalid key")
   local r = ada_string_to_lua(lib.ada_search_params_get(self[1], key, #key))
   return r
 end
@@ -173,11 +165,13 @@ end
 -- @function get_all
 -- @tparam string key search parameter name
 -- @treturn table array of all the values (or an empty array)
+-- @raise error when key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:get_all("a")
 function mt:get_all(key)
+  assert(type(key) == "string", "invalid key")
   local r = ada_strings_to_lua(lib.ada_search_params_get_all(self[1], key, #key))
   return r
 end
@@ -197,11 +191,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn search self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:set("a", "g"):tostring()
 function mt:set(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   lib.ada_search_params_set(self[1], key, #key, value, #value)
   return self
 end
@@ -216,11 +213,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn search self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:append("a", "g"):tostring()
 function mt:append(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   lib.ada_search_params_append(self[1], key, #key, value, #value)
   return self
 end
@@ -239,11 +239,13 @@ end
 -- @function remove
 -- @tparam string key search parameter name
 -- @treturn search self
+-- @raise error when key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:remove("a"):tostring()
 function mt:remove(key)
+  assert(type(key) == "string", "invalid key")
   lib.ada_search_params_remove(self[1], key, #key)
   return self
 end
@@ -258,11 +260,14 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter's value
 -- @treturn search self
+-- @raise error when key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = search:remove_value("a", "b"):tostring()
 function mt:remove_value(key, value)
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   lib.ada_search_params_remove_value(self[1], key, #key, value, #value)
   return self
 end
@@ -491,6 +496,12 @@ mt.__len = mt.size
 -- @section constructors
 
 
+local function new(search)
+  local s = ffi_gc(lib.ada_parse_search_params(search, #search), lib.ada_free_search_params)
+  return s
+end
+
+
 ---
 -- Parses search and returns an instance of Ada URL Search.
 --
@@ -503,7 +514,12 @@ mt.__len = mt.size
 --
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
-
+local function parse(search)
+  assert(type(search) == "string", "invalid search")
+  local s = new(search)
+  local self = setmetatable({ s }, mt)
+  return self
+end
 
 ---
 -- Has Functions
@@ -519,14 +535,15 @@ mt.__len = mt.size
 -- @tparam string search search to parse
 -- @tparam string key search parameter name to check
 -- @treturn boolean `true` if search has the key, otherwise `false`
--- @raise error when search is not a string
+-- @raise error when search or key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.has("a=b&c=d&e=f", "a")
 local function has(search, key)
-  local s = new(search)
-  local r = lib.ada_search_params_has(s, key, #key)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
+  local r = lib.ada_search_params_has(new(search), key, #key)
   return r
 end
 
@@ -541,14 +558,16 @@ end
 -- @tparam string key search parameter name to check
 -- @tparam string value search parameter value to check
 -- @treturn boolean `true` if search has the key with the value, otherwise `false`
--- @raise error when search is not a string
+-- @raise error when search, key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.has_value("a=b&c=d&e=f", "a", "b")
 local function has_value(search, key, value)
-  local s = new(search)
-  local r =  lib.ada_search_params_has_value(s, key, #key, value, #value)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
+  local r =  lib.ada_search_params_has_value(new(search), key, #key, value, #value)
   return r
 end
 
@@ -567,12 +586,14 @@ end
 -- @tparam string search search to parse
 -- @tparam string key search parameter name
 -- @treturn string|nil parameter value or `nil`
--- @raise error when search is not a string
+-- @raise error when search or key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.get("a=b&c=d&e=f", "a")
 local function get(search, key)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
   local r = ada_string_to_lua(lib.ada_search_params_get(new(search), key, #key))
   return r
 end
@@ -587,12 +608,14 @@ end
 -- @tparam string search search to parse
 -- @tparam string key search parameter name
 -- @treturn table array of all the values (or an empty array)
--- @raise error when search is not a string
+-- @raise error when search or key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.get_all("a=b&c=d&e=f", "a")
 local function get_all(search, key)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
   local r = ada_strings_to_lua(lib.ada_search_params_get_all(new(search), key, #key))
   return r
 end
@@ -613,12 +636,15 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn string string presentation of the search parameters
--- @raise error when search is not a string
+-- @raise error when search, key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.set("a=b&c=d&e=f", "a", "g")
 local function set(search, key, value)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local s = new(search)
   lib.ada_search_params_set(s, key, #key, value, #value)
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
@@ -636,12 +662,15 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter value
 -- @treturn string string presentation of the search parameters
--- @raise error when search is not a string
+-- @raise error when search, key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.append("a=b&c=d&e=f", "a", "g")
 local function append(search, key, value)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local s = new(search)
   lib.ada_search_params_append(s, key, #key, value, #value)
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
@@ -663,12 +692,14 @@ end
 -- @tparam string search search to parse
 -- @tparam string key search parameter name
 -- @treturn string string presentation of the search parameters
--- @raise error when search is not a string
+-- @raise error when search or key is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.remove("a=b&c=d&e=f", "a")
 local function remove(search, key)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
   local s = new(search)
   lib.ada_search_params_remove(s, key, #key)
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
@@ -686,12 +717,15 @@ end
 -- @tparam string key search parameter name
 -- @tparam string value search parameter's value
 -- @treturn string string presentation of the search parameters
--- @raise error when search is not a string
+-- @raise error when search, key or value is not a string
 --
 -- @usage
 -- local search = require("resty.ada.search")
 -- local result = search.remove_value("a=b&c=d&e=f", "a", "b")
 local function remove_value(search, key, value)
+  assert(type(search) == "string", "invalid search")
+  assert(type(key) == "string", "invalid key")
+  assert(type(value) == "string", "invalid value")
   local s = new(search)
   lib.ada_search_params_remove_value(s, key, #key, value, #value)
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
@@ -719,8 +753,8 @@ end
 --   print(param.key, " = ", param.value)
 -- end
 local function each(search)
-  local s = new(search)
-  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(s), lib.ada_free_search_params_entries_iter)
+  assert(type(search) == "string", "invalid search")
+  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(new(search)), lib.ada_free_search_params_entries_iter)
   return each_iter, entries_iter
 end
 
@@ -740,8 +774,8 @@ end
 --   print("key: ", key)
 -- end
 local function each_key(search)
-  local s = new(search)
-  local keys_iter = ffi_gc(lib.ada_search_params_get_keys(s), lib.ada_free_search_params_keys_iter)
+  assert(type(search) == "string", "invalid search")
+  local keys_iter = ffi_gc(lib.ada_search_params_get_keys(new(search)), lib.ada_free_search_params_keys_iter)
   return each_key_iter, keys_iter
 end
 
@@ -761,8 +795,8 @@ end
 --   print("value: ", value)
 -- end
 local function each_value(search)
-  local s = new(search)
-  local values_iter = ffi_gc(lib.ada_search_params_get_values(s), lib.ada_free_search_params_values_iter)
+  assert(type(search) == "string", "invalid search")
+  local values_iter = ffi_gc(lib.ada_search_params_get_values(new(search)), lib.ada_free_search_params_values_iter)
   return each_value_iter, values_iter
 end
 
@@ -782,8 +816,8 @@ end
 --   print(key, " = ", value)
 -- end
 local function search_pairs(search)
-  local s = new(search)
-  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(s), lib.ada_free_search_params_entries_iter)
+  assert(type(search) == "string", "invalid search")
+  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(new(search)), lib.ada_free_search_params_entries_iter)
   return pairs_iter, entries_iter
 end
 
@@ -802,8 +836,8 @@ end
 --   print(i, ". ", param.key, " = ", param.value)
 -- end
 local function search_ipairs(search)
-  local s = new(search)
-  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(s), lib.ada_free_search_params_entries_iter)
+  assert(type(search) == "string", "invalid search")
+  local entries_iter = ffi_gc(lib.ada_search_params_get_entries(new(search)), lib.ada_free_search_params_entries_iter)
   return ipairs_iter, entries_iter, 0
 end
 
@@ -827,6 +861,7 @@ end
 -- local search = require("resty.ada.search")
 -- local result = search.sort("e=f&c=d&a=b")
 local function sort(search)
+  assert(type(search) == "string", "invalid search")
   local s = new(search)
   lib.ada_search_params_sort(s)
   local r = ada_owned_string_to_lua(lib.ada_search_params_to_string(s))
@@ -846,6 +881,7 @@ end
 -- local search = require("resty.ada.search")
 -- local result = search.size("a=b&c=d&e=f")
 local function size(search)
+  assert(type(search) == "string", "invalid search")
   local r = tonumber(lib.ada_search_params_size(new(search)), 10)
   return r
 end
