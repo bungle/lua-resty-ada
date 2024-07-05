@@ -9,3 +9,4 @@ format = "discount"
 file = "./lib/resty"
 style = "!new"
 multimodule = true
+icon = "icon.png"

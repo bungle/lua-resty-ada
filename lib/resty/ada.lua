@@ -2615,7 +2615,7 @@ return {
   -- @see resty.ada.search
   -- @usage
   -- local ada = require("resty.ada")
-  -- local result = ada.search.has("a=b&c=d&e=f", "a")
+  -- local res = ada.search.has("a=b&c=d&e=f", "a")
   search = search,
   parse = parse,
   parse_with_base = parse_with_base,
