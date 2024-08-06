@@ -136,20 +136,20 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_username">url:get_username ()</a></td>
-	<td class="summary">Get URL&rsquo;s username.</td>
+	<td class="summary">Get URL's username.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_password">url:get_password ()</a></td>
-	<td class="summary">Get URL&rsquo;s password.</td>
+	<td class="summary">Get URL's password.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_host">url:get_host ()</a></td>
-	<td class="summary">Get URL&rsquo;s host, serialized, followed by U+003A (:) and url&rsquo;s port,
+	<td class="summary">Get URL's host, serialized, followed by U+003A (:) and url's port,
  serialized.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_hostname">url:get_hostname ()</a></td>
-	<td class="summary">Get  URL&rsquo;s host (name only), serialized.</td>
+	<td class="summary">Get  URL's host (name only), serialized.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_host_type">url:get_host_type ()</a></td>
@@ -157,19 +157,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_port">url:get_port ()</a></td>
-	<td class="summary">Get URL&rsquo;s port.</td>
+	<td class="summary">Get URL's port.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_pathname">url:get_pathname ()</a></td>
-	<td class="summary">Get URL&rsquo;s path.</td>
+	<td class="summary">Get URL's path.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_search">url:get_search ()</a></td>
-	<td class="summary">Get URL&rsquo;s search (query).</td>
+	<td class="summary">Get URL's search (query).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:get_hash">url:get_hash ()</a></td>
-	<td class="summary">Get URL&rsquo;s hash (fragment).</td>
+	<td class="summary">Get URL's hash (fragment).</td>
 	</tr>
 </table>
 <h2><a href="#Set_Methods">Set Methods </a></h2>
@@ -219,15 +219,15 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#url:clear_port">url:clear_port ()</a></td>
-	<td class="summary">Clear URL&rsquo;s port.</td>
+	<td class="summary">Clear URL's port.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:clear_search">url:clear_search ()</a></td>
-	<td class="summary">Clear URL&rsquo;s search (query string).</td>
+	<td class="summary">Clear URL's search (query string).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:clear_hash">url:clear_hash ()</a></td>
-	<td class="summary">Clear URL&rsquo;s hash (fragment).</td>
+	<td class="summary">Clear URL's hash (fragment).</td>
 	</tr>
 </table>
 <h2><a href="#Search_Methods">Search Methods </a></h2>
@@ -246,19 +246,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_get">url:search_get (key)</a></td>
-	<td class="summary">Get URL&rsquo;s search parameter&rsquo;s value.</td>
+	<td class="summary">Get URL's search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_get_all">url:search_get_all (key)</a></td>
-	<td class="summary">Get all the URL&rsquo;s search parameter&rsquo;s values.</td>
+	<td class="summary">Get all the URL's search parameter's values.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_set">url:search_set (key, value)</a></td>
-	<td class="summary">Set the URL&rsquo;s search parameter&rsquo;s value.</td>
+	<td class="summary">Set the URL's search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_append">url:search_append (key, value)</a></td>
-	<td class="summary">Append value to the the URL&rsquo;s search parameter.</td>
+	<td class="summary">Append value to the the URL's search parameter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_remove">url:search_remove (key)</a></td>
@@ -266,11 +266,11 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_remove_value">url:search_remove_value (key, value)</a></td>
-	<td class="summary">Remove search parameter&rsquo;s value from URL.</td>
+	<td class="summary">Remove search parameter's value from URL.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_sort">url:search_sort ()</a></td>
-	<td class="summary">Sort the URL&rsquo;s search parameters.</td>
+	<td class="summary">Sort the URL's search parameters.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#url:search_size">url:search_size ()</a></td>
@@ -320,6 +320,7 @@
 	<tr>
 	<td class="name" nowrap><a href="#url._VERSION">url._VERSION</a></td>
 	<td class="summary">
+
 </td>
 	</tr>
 </table>
@@ -596,7 +597,8 @@
     <strong>url:get_components ()</strong>
     </dt>
     <dd>
-    <p>Get URL component positions in a string (Lua 1-based indexing). </p>
+
+<p>Get URL component positions in a string (Lua 1-based indexing). </p>
 
 <pre><code>https://user:pass@example.com:1234/foo/bar?baz#quux
       |     |    |          | ^^^^|       |   |
@@ -611,7 +613,6 @@
 </code></pre>
 
 <p> Given a following URL:</p>
-
 <pre><code>https://user:pass@example.com:1234/foo/bar?baz#quux
 </code></pre>
 
@@ -628,6 +629,7 @@
   hash_start = 47,
 }
 </code></pre>
+
 
 
 
@@ -708,7 +710,8 @@
     <strong>url:get_scheme_type ()</strong>
     </dt>
     <dd>
-    <p>Get scheme type from the URL. </p>
+
+<p>Get scheme type from the URL. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#url-miscellaneous">https://url.spec.whatwg.org/#url-miscellaneous</a></p>
 
@@ -722,6 +725,7 @@
 5 = WSS
 6 = FILE
 </code></pre>
+
 
 
 
@@ -774,7 +778,7 @@
     <strong>url:get_username ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s username. </p>
+    Get URL's username. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-username">https://url.spec.whatwg.org/#dom-url-username</a>
 
@@ -784,7 +788,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s username
+        URL's username
     </ol>
 
 
@@ -801,7 +805,7 @@
     <strong>url:get_password ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s password. </p>
+    Get URL's password. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-password">https://url.spec.whatwg.org/#dom-url-password</a>
 
@@ -811,7 +815,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s password
+        URL's password
     </ol>
 
 
@@ -828,7 +832,7 @@
     <strong>url:get_host ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s host, serialized, followed by U+003A (:) and url&rsquo;s port,
+    Get URL's host, serialized, followed by U+003A (:) and url's port,
  serialized. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-host">https://url.spec.whatwg.org/#dom-url-host</a>
@@ -839,7 +843,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s host
+        URL's host
     </ol>
 
 
@@ -856,7 +860,7 @@
     <strong>url:get_hostname ()</strong>
     </dt>
     <dd>
-    Get  URL&rsquo;s host (name only), serialized. </p>
+    Get  URL's host (name only), serialized. </p>
 
 <p> When there is no host, this function returns the empty string.</p>
 
@@ -868,7 +872,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s host (name only)
+        URL's host (name only)
     </ol>
 
 
@@ -885,7 +889,8 @@
     <strong>url:get_host_type ()</strong>
     </dt>
     <dd>
-    <p>Get host type from the URL. </p>
+
+<p>Get host type from the URL. </p>
 
 <p> Host type definitions:</p>
 
@@ -893,6 +898,7 @@
 1 = IPV4:    e.g. "http://127.0.0.1"
 2 = IPV6:    e.g. "http://[2001:db8:3333:4444:5555:6666:7777:8888]"
 </code></pre>
+
 
 
 
@@ -918,7 +924,7 @@
     <strong>url:get_port ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s port. </p>
+    Get URL's port. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -928,7 +934,7 @@
     <ol>
 
            <span class="types"><span class="type">number</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s port
+        URL's port
     </ol>
 
 
@@ -945,7 +951,7 @@
     <strong>url:get_pathname ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s path. </p>
+    Get URL's path. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-pathname">https://url.spec.whatwg.org/#dom-url-pathname</a>
 
@@ -955,7 +961,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s path
+        URL's path
     </ol>
 
 
@@ -972,9 +978,9 @@
     <strong>url:get_search ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s search (query). </p>
+    Get URL's search (query). </p>
 
-<p> Return U+003F (?), followed by URL&rsquo;s query.</p>
+<p> Return U+003F (?), followed by URL's query.</p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-search">https://url.spec.whatwg.org/#dom-url-search</a>
 
@@ -984,7 +990,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s query
+        URL's query
     </ol>
 
 
@@ -1001,9 +1007,9 @@
     <strong>url:get_hash ()</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s hash (fragment). </p>
+    Get URL's hash (fragment). </p>
 
-<p> Return U+0023 (#), followed by URL&rsquo;s fragment.</p>
+<p> Return U+0023 (#), followed by URL's fragment.</p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-hash">https://url.spec.whatwg.org/#dom-url-hash</a>
 
@@ -1013,7 +1019,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        URL&rsquo;s fragment (except on errors <code>nil</code>)
+        URL's fragment (except on errors <code>nil</code>)
     </ol>
 
 
@@ -1422,7 +1428,7 @@
     <strong>url:clear_port ()</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s port. </p>
+    Clear URL's port. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -1449,7 +1455,7 @@
     <strong>url:clear_search ()</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s search (query string). </p>
+    Clear URL's search (query string). </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-search">https://url.spec.whatwg.org/#dom-url-search</a>
 
@@ -1476,7 +1482,7 @@
     <strong>url:clear_hash ()</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s hash (fragment). </p>
+    Clear URL's hash (fragment). </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-hash">https://url.spec.whatwg.org/#dom-url-hash</a>
 
@@ -1604,7 +1610,7 @@
     <strong>url:search_get (key)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s search parameter&rsquo;s value.
+    Get URL's search parameter's value.
 
 
     <h3>Parameters:</h3>
@@ -1638,7 +1644,7 @@
     <strong>url:search_get_all (key)</strong>
     </dt>
     <dd>
-    Get all the URL&rsquo;s search parameter&rsquo;s values.
+    Get all the URL's search parameter's values.
 
 
     <h3>Parameters:</h3>
@@ -1672,7 +1678,7 @@
     <strong>url:search_set (key, value)</strong>
     </dt>
     <dd>
-    Set the URL&rsquo;s search parameter&rsquo;s value.
+    Set the URL's search parameter's value.
 
 
     <h3>Parameters:</h3>
@@ -1710,7 +1716,7 @@
     <strong>url:search_append (key, value)</strong>
     </dt>
     <dd>
-    Append value to the the URL&rsquo;s search parameter.
+    Append value to the the URL's search parameter.
 
 
     <h3>Parameters:</h3>
@@ -1782,7 +1788,7 @@
     <strong>url:search_remove_value (key, value)</strong>
     </dt>
     <dd>
-    Remove search parameter&rsquo;s value from URL.
+    Remove search parameter's value from URL.
 
 
     <h3>Parameters:</h3>
@@ -1793,7 +1799,7 @@
         </li>
         <li><span class="parameter">value</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         search parameter&rsquo;s value
+         search parameter's value
         </li>
     </ul>
 
@@ -1820,7 +1826,7 @@
     <strong>url:search_sort ()</strong>
     </dt>
     <dd>
-    Sort the URL&rsquo;s search parameters.
+    Sort the URL's search parameters.
 
 
 
@@ -2114,6 +2120,7 @@
 
 
 
+
     <ul>
         <li><span class="parameter">_VERSION</span>
          resty.ada version
@@ -2132,7 +2139,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-08-06 13:44:01 </i>
+<i style="float:right;">Last updated 2024-08-06 23:06:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -1331,8 +1331,7 @@ end
 --
 -- @function can_parse
 -- @tparam string url URL (or part of it) to check
--- @treturn boolean|nil `true` if URL can be parsed, otherwise `false` (except on errors `nil`)
--- @treturn nil|string error message
+-- @treturn boolean `true` if URL can be parsed, otherwise `false`
 -- @see can_parse_with_base
 -- @see is_valid
 --
@@ -1352,8 +1351,7 @@ end
 -- @function can_parse_with_base
 -- @tparam string url URL (or part of it) to check
 -- @tparam string base base url to check
--- @treturn boolean|nil `true` if URL can be parsed, otherwise `false` (except on errors `nil`)
--- @treturn nil|string error message
+-- @treturn boolean `true` if URL can be parsed, otherwise `false`
 -- @see can_parse
 -- @see is_valid
 --
@@ -1371,70 +1369,6 @@ end
 local U = parse("https://localhost") -- just a dummy init value for this singleton
 
 
-local function static_prepare(url)
-  if not can_parse(url) then
-    return nil, "invalid url"
-  end
-  local u, err = U:set_href(url)
-  return u, err
-end
-
-
-local function static_get_call(url, func)
-  local u, err = static_prepare(url)
-  if err then
-    return nil, err
-  end
-  local r, err = func(u)
-  return r, err
-end
-
-
-local function static_set_call(url, func, val)
-  local u, err = static_prepare(url)
-  if err then
-    return nil, err
-  end
-  local _, err = func(u, val)
-  if err then
-    return nil, err
-  end
-  local r = u:get_href()
-  return r
-end
-
-
-local function static_clear_call(url, func)
-  local u, err = static_prepare(url)
-  if err then
-    return nil, err
-  end
-  local r = func(u):get_href()
-  return r
-end
-
-
-local function gen_static_get_call(func)
-  return function(url)
-    return static_get_call(url, func)
-  end
-end
-
-
-local function gen_static_set_call(func)
-  return function(url, val)
-    return static_set_call(url, func, val)
-  end
-end
-
-
-local function gen_static_clear_call(func)
-  return function(url)
-    return static_clear_call(url, func)
-  end
-end
-
-
 ---
 -- Checks whether the URL is valid.
 --
@@ -1449,7 +1383,14 @@ end
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.is_valid("https://user:pass@host:1234/path?search#hash")
-local is_valid = gen_static_get_call(mt.is_valid)
+local function is_valid(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:is_valid()
+  return r
+end
 
 
 ---
@@ -1475,7 +1416,14 @@ local is_valid = gen_static_get_call(mt.is_valid)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_credentials("https://user:pass@host:1234/path?search#hash")
-local has_credentials = gen_static_get_call(mt.has_credentials)
+local function has_credentials(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_credentials()
+  return r
+end
 
 
 ---
@@ -1493,7 +1441,14 @@ local has_credentials = gen_static_get_call(mt.has_credentials)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_non_empty_username("https://user:pass@host:1234/path?search#hash")
-local has_non_empty_username = gen_static_get_call(mt.has_non_empty_username)
+local function has_non_empty_username(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_non_empty_username()
+  return r
+end
 
 
 ---
@@ -1512,7 +1467,14 @@ local has_non_empty_username = gen_static_get_call(mt.has_non_empty_username)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_password("https://user:pass@host:1234/path?search#hash")
-local has_password = gen_static_get_call(mt.has_password)
+local function has_password(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_password()
+  return r
+end
 
 
 ---
@@ -1531,7 +1493,14 @@ local has_password = gen_static_get_call(mt.has_password)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_non_empty_password("https://user:pass@host:1234/path?search#hash")
-local has_non_empty_password = gen_static_get_call(mt.has_non_empty_password)
+local function has_non_empty_password(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_non_empty_password()
+  return r
+end
 
 
 ---
@@ -1549,7 +1518,14 @@ local has_non_empty_password = gen_static_get_call(mt.has_non_empty_password)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_hostname("https://user:pass@host:1234/path?search#hash")
-local has_hostname = gen_static_get_call(mt.has_hostname)
+local function has_hostname(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_hostname()
+  return r
+end
 
 
 ---
@@ -1567,7 +1543,14 @@ local has_hostname = gen_static_get_call(mt.has_hostname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_empty_hostname("https://user:pass@host:1234/path?search#hash")
-local has_empty_hostname = gen_static_get_call(mt.has_empty_hostname)
+local function has_empty_hostname(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_empty_hostname()
+  return r
+end
 
 
 ---
@@ -1585,7 +1568,14 @@ local has_empty_hostname = gen_static_get_call(mt.has_empty_hostname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_port("https://user:pass@host:1234/path?search#hash")
-local has_port = gen_static_get_call(mt.has_port)
+local function has_port(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_port()
+  return r
+end
 
 
 ---
@@ -1603,7 +1593,14 @@ local has_port = gen_static_get_call(mt.has_port)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_search("https://user:pass@host:1234/path?search#hash")
-local has_search = gen_static_get_call(mt.has_search)
+local function has_search(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_search()
+  return r
+end
 
 
 ---
@@ -1621,7 +1618,14 @@ local has_search = gen_static_get_call(mt.has_search)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.has_hash("https://user:pass@host:1234/path?search#hash")
-local has_hash = gen_static_get_call(mt.has_hash)
+local function has_hash(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:has_hash()
+  return r
+end
 
 
 ---
@@ -1670,7 +1674,14 @@ local has_hash = gen_static_get_call(mt.has_hash)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_components("https://user:pass@host:1234/path?search#hash")
-local get_components = gen_static_get_call(mt.get_components)
+local function get_components(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_components()
+  return r
+end
 
 
 ---
@@ -1688,7 +1699,14 @@ local get_components = gen_static_get_call(mt.get_components)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_href("https://user:pass@host:1234/path?search#hash")
-local get_href = gen_static_get_call(mt.get_href)
+local function get_href(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_href()
+  return r
+end
 
 
 ---
@@ -1706,7 +1724,14 @@ local get_href = gen_static_get_call(mt.get_href)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_protocol("https://user:pass@host:1234/path?search#hash")
-local get_protocol = gen_static_get_call(mt.get_protocol)
+local function get_protocol(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_protocol()
+  return r
+end
 
 
 ---
@@ -1733,7 +1758,14 @@ local get_protocol = gen_static_get_call(mt.get_protocol)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_scheme_type("https://user:pass@host:1234/path?search#hash")
-local get_scheme_type = gen_static_get_call(mt.get_scheme_type)
+local function get_scheme_type(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_scheme_type()
+  return r
+end
 
 
 ---
@@ -1750,7 +1782,14 @@ local get_scheme_type = gen_static_get_call(mt.get_scheme_type)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_origin("https://user:pass@host:1234/path?search#hash")
-local get_origin = gen_static_get_call(mt.get_origin)
+local function get_origin(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_origin()
+  return r
+end
 
 
 ---
@@ -1770,7 +1809,14 @@ local get_origin = gen_static_get_call(mt.get_origin)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_username("https://user:pass@host:1234/path?search#hash")
-local get_username = gen_static_get_call(mt.get_username)
+local function get_username(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_username()
+  return r
+end
 
 
 ---
@@ -1791,7 +1837,14 @@ local get_username = gen_static_get_call(mt.get_username)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_password("https://user:pass@host:1234/path?search#hash")
-local get_password = gen_static_get_call(mt.get_password)
+local function get_password(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_password()
+  return r
+end
 
 
 ---
@@ -1810,7 +1863,14 @@ local get_password = gen_static_get_call(mt.get_password)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_host("https://user:pass@host:1234/path?search#hash")
-local get_host = gen_static_get_call(mt.get_host)
+local function get_host(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_host()
+  return r
+end
 
 
 ---
@@ -1832,7 +1892,14 @@ local get_host = gen_static_get_call(mt.get_host)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_hostname("https://user:pass@host:1234/path?search#hash")
-local get_hostname = gen_static_get_call(mt.get_hostname)
+local function get_hostname(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_hostname()
+  return r
+end
 
 
 ---
@@ -1853,7 +1920,14 @@ local get_hostname = gen_static_get_call(mt.get_hostname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_host_type("https://user:pass@host:1234/path?search#hash")
-local get_host_type = gen_static_get_call(mt.get_host_type)
+local function get_host_type(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_host_type()
+  return r
+end
 
 
 ---
@@ -1873,7 +1947,14 @@ local get_host_type = gen_static_get_call(mt.get_host_type)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_port("https://user:pass@host:1234/path?search#hash")
-local get_port = gen_static_get_call(mt.get_port)
+local function get_port(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_port()
+  return r
+end
 
 
 ---
@@ -1891,7 +1972,14 @@ local get_port = gen_static_get_call(mt.get_port)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_pathname("https://user:pass@host:1234/path?search#hash")
-local get_pathname = gen_static_get_call(mt.get_pathname)
+local function get_pathname(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_pathname()
+  return r
+end
 
 
 ---
@@ -1913,7 +2001,14 @@ local get_pathname = gen_static_get_call(mt.get_pathname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_search("https://user:pass@host:1234/path?search#hash")
-local get_search = gen_static_get_call(mt.get_search)
+local function get_search(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_search()
+  return r
+end
 
 
 ---
@@ -1935,7 +2030,14 @@ local get_search = gen_static_get_call(mt.get_search)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.get_hash("https://user:pass@host:1234/path?search#hash")
-local get_hash = gen_static_get_call(mt.get_hash)
+local function get_hash(url)
+  local ok, err = U:set_href(url)
+  if not ok then
+    return nil, err
+  end
+  local r = U:get_hash()
+  return r
+end
 
 
 ---
@@ -1959,7 +2061,18 @@ local get_hash = gen_static_get_call(mt.get_hash)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_protocol("https://user:pass@host:1234/path?search#hash", "wss")
-local set_protocol = gen_static_set_call(mt.set_protocol)
+local function set_protocol(url, protocol)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_protocol(protocol)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -1980,7 +2093,18 @@ local set_protocol = gen_static_set_call(mt.set_protocol)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_username("https://user:pass@host:1234/path?search#hash", "guest")
-local set_username = gen_static_set_call(mt.set_username)
+local function set_username(url, username)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_username(username)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2002,7 +2126,18 @@ local set_username = gen_static_set_call(mt.set_username)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_password("https://user:pass@host:1234/path?search#hash", "secret")
-local set_password = gen_static_set_call(mt.set_password)
+local function set_password(url, password)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_password(password)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2021,7 +2156,18 @@ local set_password = gen_static_set_call(mt.set_password)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_host("https://user:pass@host:1234/path?search#hash", "test:4321")
-local set_host = gen_static_set_call(mt.set_host)
+local function set_host(url, host)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_host(host)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2042,7 +2188,18 @@ local set_host = gen_static_set_call(mt.set_host)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_hostname("https://user:pass@host:1234/path?search#hash", "test")
-local set_hostname = gen_static_set_call(mt.set_hostname)
+local function set_hostname(url, hostname)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_hostname(hostname)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2063,7 +2220,18 @@ local set_hostname = gen_static_set_call(mt.set_hostname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_port("https://user:pass@host:1234/path?search#hash", 4321)
-local set_port = gen_static_set_call(mt.set_port)
+local function set_port(url, port)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_port(port)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2073,7 +2241,7 @@ local set_port = gen_static_set_call(mt.set_port)
 --
 -- @function set_pathname
 -- @tparam string url URL (or part of it) for which to set the path
--- @tparam string path the path to set to the URL
+-- @tparam string pathname the path to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
 -- @raise error when url or pathname is not a string
@@ -2082,7 +2250,18 @@ local set_port = gen_static_set_call(mt.set_port)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_pathname("https://user:pass@host:1234/path?search#hash", "foo")
-local set_pathname = gen_static_set_call(mt.set_pathname)
+local function set_pathname(url, pathname)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_pathname(pathname)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2092,7 +2271,7 @@ local set_pathname = gen_static_set_call(mt.set_pathname)
 --
 -- @function set_search
 -- @tparam string url URL (or part of it) for which to set the query string
--- @tparam string search the query string to set to the URL
+-- @tparam string query the query string to set to the URL
 -- @treturn string|nil URL in a normalized form (except on errors `nil`)
 -- @treturn nil|string error message
 -- @raise error when url or search is not a string
@@ -2103,7 +2282,18 @@ local set_pathname = gen_static_set_call(mt.set_pathname)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_search("https://user:pass@host:1234/path?search#hash", "q=1&done")
-local set_search = gen_static_set_call(mt.set_search)
+local function set_search(url, query)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_search(query)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2124,7 +2314,18 @@ local set_search = gen_static_set_call(mt.set_search)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.set_hash("https://user:pass@host:1234/path?search#hash", "home")
-local set_hash = gen_static_set_call(mt.set_hash)
+local function set_hash(url, hash)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r, e = U:set_hash(hash)
+  if not r then
+    return nil, e
+  end
+  r = U:get_href()
+  return r
+end
 
 
 ---
@@ -2149,7 +2350,14 @@ local set_hash = gen_static_set_call(mt.set_hash)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.clear_port("https://user:pass@host:1234/path?search#hash")
-local clear_port = gen_static_clear_call(mt.clear_port)
+local function clear_port(url)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r = U:clear_port():get_href()
+  return r
+end
 
 
 ---
@@ -2169,7 +2377,14 @@ local clear_port = gen_static_clear_call(mt.clear_port)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.clear_search("https://user:pass@host:1234/path?search#hash")
-local clear_search = gen_static_clear_call(mt.clear_search)
+local function clear_search(url)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r = U:clear_search():get_href()
+  return r
+end
 
 
 ---
@@ -2189,7 +2404,14 @@ local clear_search = gen_static_clear_call(mt.clear_search)
 -- @usage
 -- local ada = require("resty.ada")
 -- local res = ada.clear_hash("https://user:pass@host:1234/path?search#hash")
-local clear_hash = gen_static_clear_call(mt.clear_hash)
+local function clear_hash(url)
+  local r, e = U:set_href(url)
+  if not r then
+    return nil, e
+  end
+  r = U:clear_hash():get_href()
+  return r
+end
 
 
 ---
@@ -2209,13 +2431,12 @@ local clear_hash = gen_static_clear_call(mt.clear_hash)
 -- @usage
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 local function search_parse(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  s, err = search.parse(s or "")
-  return s, err
+  s = search.parse(s or "")
+  return s
 end
 
 
@@ -2233,8 +2454,6 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_has("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_has(url, key)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2259,9 +2478,6 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_has_value("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "b")
 local function search_has_value(url, key, value)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
-  assert(type(value) == "string", "invalid value")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2285,8 +2501,6 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_get("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_get(url, key)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2310,8 +2524,6 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_get_all("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_get_all(url, key)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2336,14 +2548,11 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_set("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "g")
 local function search_set(url, key, value)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
-  assert(type(value) == "string", "invalid value")
-  local u, err = static_prepare(url)
+  local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local r = u:set_search(search.set(u:get_search() or "", key, value)):get_href()
+  local r = U:set_search(search.set(s, key, value)):get_href()
   return r
 end
 
@@ -2363,14 +2572,11 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_append("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "g")
 local function search_append(url, key, value)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
-  assert(type(value) == "string", "invalid value")
-  local u, err = static_prepare(url)
+  local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local r = u:set_search(search.append(u:get_search() or "", key, value)):get_href()
+  local r = U:set_search(search.append(s, key, value)):get_href()
   return r
 end
 
@@ -2389,13 +2595,11 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_remove("https://user:pass@host:1234/?a=b&c=d&e=f", "a")
 local function search_remove(url, key)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
-  local u, err = static_prepare(url)
+  local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local r = u:set_search(search.remove(u:get_search() or "", key)):get_href()
+  local r = U:set_search(search.remove(s, key)):get_href()
   return r
 end
 
@@ -2415,14 +2619,11 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_remove_value("https://user:pass@host:1234/?a=b&c=d&e=f", "a", "b")
 local function search_remove_value(url, key, value)
-  assert(type(url) == "string", "invalid url")
-  assert(type(key) == "string", "invalid key")
-  assert(type(value) == "string", "invalid value")
-  local u, err = static_prepare(url)
+  local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local r = u:set_search(search.remove_value(u:get_search() or "", key, value)):get_href()
+  local r = U:set_search(search.remove_value(s, key, value)):get_href()
   return r
 end
 
@@ -2440,12 +2641,11 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_sort("https://user:pass@host:1234/?e=f&c=d&a=b")
 local function search_sort(url)
-  assert(type(url) == "string", "invalid url")
-  local u, err = static_prepare(url)
+  local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local r = u:set_search(search.sort(u:get_search() or "")):get_href()
+  local r = U:set_search(search.sort(s)):get_href()
   return r
 end
 
@@ -2463,7 +2663,6 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.search_size("https://user:pass@host:1234/?a=b&c=d&e=f")
 local function search_size(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
@@ -2488,13 +2687,12 @@ end
 --   print(param.key, " = ", param.value)
 -- end
 local function search_each(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local each_iter, entries_iter = search.each(s or "")
-  return each_iter, entries_iter
+  local iterator, invariant_state = search.each(s or "")
+  return iterator, invariant_state
 end
 
 
@@ -2513,13 +2711,12 @@ end
 --   print("key: ", key)
 -- end
 local function search_each_key(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local each_key_iter, keys_iter = search.each_key(s or "")
-  return each_key_iter, keys_iter
+  local iterator, invariant_state = search.each_key(s or "")
+  return iterator, invariant_state
 end
 
 
@@ -2538,13 +2735,12 @@ end
 --   print("value: ", value)
 -- end
 local function search_each_value(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local each_value_iter, values_iter = search.each_value(s or "")
-  return each_value_iter, values_iter
+  local iterator, invariant_state = search.each_value(s or "")
+  return iterator, invariant_state
 end
 
 
@@ -2563,13 +2759,12 @@ end
 --   print(key, " = ", value)
 -- end
 local function search_pairs(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local pairs_iter, entries_iter = search.pairs(s or "")
-  return pairs_iter, entries_iter
+  local iterator, invariant_state = search.pairs(s or "")
+  return iterator, invariant_state
 end
 
 
@@ -2588,13 +2783,12 @@ end
 --   print(i, ". ", param.key, " = ", param.value)
 -- end
 local function search_ipairs(url)
-  assert(type(url) == "string", "invalid url")
   local s, err = get_search(url)
   if err then
     return nil, err
   end
-  local ipairs_iter, entries_iter, invariant_state = search.ipairs(s or "")
-  return ipairs_iter, entries_iter, invariant_state
+  local iterator, invariant_state, initial_value = search.ipairs(s or "")
+  return iterator, invariant_state, initial_value
 end
 
 

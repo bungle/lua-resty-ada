@@ -167,20 +167,20 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_username">get_username (url)</a></td>
-	<td class="summary">Get URL&rsquo;s username.</td>
+	<td class="summary">Get URL's username.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_password">get_password (url)</a></td>
-	<td class="summary">Get URL&rsquo;s password.</td>
+	<td class="summary">Get URL's password.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_host">get_host (url)</a></td>
-	<td class="summary">Get URL&rsquo;s host, serialized, followed by U+003A (:) and url&rsquo;s port,
+	<td class="summary">Get URL's host, serialized, followed by U+003A (:) and url's port,
  serialized.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_hostname">get_hostname (url)</a></td>
-	<td class="summary">Get  URL&rsquo;s host (name only), serialized.</td>
+	<td class="summary">Get  URL's host (name only), serialized.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_host_type">get_host_type (url)</a></td>
@@ -188,19 +188,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_port">get_port (url)</a></td>
-	<td class="summary">Get URL&rsquo;s port.</td>
+	<td class="summary">Get URL's port.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_pathname">get_pathname (url)</a></td>
-	<td class="summary">Get URL&rsquo;s path.</td>
+	<td class="summary">Get URL's path.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_search">get_search (url)</a></td>
-	<td class="summary">Get URL&rsquo;s search (query).</td>
+	<td class="summary">Get URL's search (query).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_hash">get_hash (url)</a></td>
-	<td class="summary">Get URL&rsquo;s hash (fragment).</td>
+	<td class="summary">Get URL's hash (fragment).</td>
 	</tr>
 </table>
 <h2><a href="#Set_Functions">Set Functions </a></h2>
@@ -230,11 +230,11 @@
 	<td class="summary">Sets port to the URL.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#set_pathname">set_pathname (url, path)</a></td>
+	<td class="name" nowrap><a href="#set_pathname">set_pathname (url, pathname)</a></td>
 	<td class="summary">Sets path to the URL.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#set_search">set_search (url, search)</a></td>
+	<td class="name" nowrap><a href="#set_search">set_search (url, query)</a></td>
 	<td class="summary">Sets search (query) to the URL.</td>
 	</tr>
 	<tr>
@@ -246,15 +246,15 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#clear_port">clear_port (url)</a></td>
-	<td class="summary">Clear URL&rsquo;s port.</td>
+	<td class="summary">Clear URL's port.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#clear_search">clear_search (url)</a></td>
-	<td class="summary">Clear URL&rsquo;s search (query string).</td>
+	<td class="summary">Clear URL's search (query string).</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#clear_hash">clear_hash (url)</a></td>
-	<td class="summary">Clear URL&rsquo;s hash (fragment).</td>
+	<td class="summary">Clear URL's hash (fragment).</td>
 	</tr>
 </table>
 <h2><a href="#Search_Functions">Search Functions </a></h2>
@@ -273,19 +273,19 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_get">search_get (url, key)</a></td>
-	<td class="summary">Get URL&rsquo;s search parameter&rsquo;s value.</td>
+	<td class="summary">Get URL's search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_get_all">search_get_all (url, key)</a></td>
-	<td class="summary">Get all the URL&rsquo;s search parameter&rsquo;s values.</td>
+	<td class="summary">Get all the URL's search parameter's values.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_set">search_set (url, key, value)</a></td>
-	<td class="summary">Set the URL&rsquo;s search parameter&rsquo;s value.</td>
+	<td class="summary">Set the URL's search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_append">search_append (url, key, value)</a></td>
-	<td class="summary">Append value to the the URL&rsquo;s search parameter.</td>
+	<td class="summary">Append value to the the URL's search parameter.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_remove">search_remove (url, key)</a></td>
@@ -293,11 +293,11 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_remove_value">search_remove_value (url, key, value)</a></td>
-	<td class="summary">Remove search parameter&rsquo;s value from URL.</td>
+	<td class="summary">Remove search parameter's value from URL.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_sort">search_sort (url)</a></td>
-	<td class="summary">Sort the URL&rsquo;s search parameters.</td>
+	<td class="summary">Sort the URL's search parameters.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_size">search_size (url)</a></td>
@@ -447,7 +447,7 @@
 <p> It will not do percent decoding: percent decoding should be done prior to
  calling this function. We do not remove tabs and spaces, they should have
  been removed prior to calling this function. We also do not trim control
- characters. We also assume that the input is not empty. We return &ldquo;&rdquo; on error.</p>
+ characters. We also assume that the input is not empty. We return "" on error.</p>
 
 <p> This function may accept or even produce invalid domains.</p>
 
@@ -467,20 +467,19 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 <p> They are all mapped to U+002E.</p>
 
 <p> We process each label into a string that should not exceed 63 octets.
- If the string is already punycode (starts with &ldquo;xn&mdash;&rdquo;), then we must
+ If the string is already punycode (starts with "xn--"), then we must
  scan it to look for unallowed code points.</p>
 
 <p> Otherwise, if the string is not pure ASCII, we need to transcode it
  to punycode by following RFC 3454 which requires us to:</p>
 
 <ul>
-<li>Map characters  (see section 3),</li>
-<li>Normalize (see section 4),</li>
-<li>Reject forbidden characters,</li>
-<li>Check for right-to-left characters and if so, check all requirements (see section 6),</li>
-<li>Optionally reject based on unassigned code points (section 7).</li>
+    <li>Map characters  (see section 3),</li>
+    <li>Normalize (see section 4),</li>
+    <li>Reject forbidden characters,</li>
+    <li>Check for right-to-left characters and if so, check all requirements (see section 6),</li>
+    <li>Optionally reject based on unassigned code points (section 7).</li>
 </ul>
-
 
 <p> The Unicode standard provides a table of code points with a mapping, a list
  of forbidden code points and so forth. This table is subject to change and
@@ -586,12 +585,9 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 
     <h3>Returns:</h3>
     <ol>
-        <li>
-           <span class="types"><span class="type">boolean</span> or <span class="type">nil</span></span>
-        <code>true</code> if URL can be parsed, otherwise <code>false</code> (except on errors <code>nil</code>)</li>
-        <li>
-           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        error message</li>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if URL can be parsed, otherwise <code>false</code>
     </ol>
 
 
@@ -632,12 +628,9 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 
     <h3>Returns:</h3>
     <ol>
-        <li>
-           <span class="types"><span class="type">boolean</span> or <span class="type">nil</span></span>
-        <code>true</code> if URL can be parsed, otherwise <code>false</code> (except on errors <code>nil</code>)</li>
-        <li>
-           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        error message</li>
+
+           <span class="types"><span class="type">boolean</span></span>
+        <code>true</code> if URL can be parsed, otherwise <code>false</code>
     </ol>
 
 
@@ -1102,7 +1095,8 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_components (url)</strong>
     </dt>
     <dd>
-    <p>Parses URL and returns a table with URL component positions in a string (Lua 1-based indexing). </p>
+
+<p>Parses URL and returns a table with URL component positions in a string (Lua 1-based indexing). </p>
 
 <p> Please be careful with the output of this function as it normalizes the input string.</p>
 
@@ -1119,7 +1113,6 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 </code></pre>
 
 <p> Given a following URL:</p>
-
 <pre><code>https://user:pass@example.com:1234/foo/bar?baz#quux
 </code></pre>
 
@@ -1136,6 +1129,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
   hash_start = 47,
 }
 </code></pre>
+
 
 
 
@@ -1256,7 +1250,8 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_scheme_type (url)</strong>
     </dt>
     <dd>
-    <p>Get scheme type from the URL. </p>
+
+<p>Get scheme type from the URL. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#url-miscellaneous">https://url.spec.whatwg.org/#url-miscellaneous</a></p>
 
@@ -1270,6 +1265,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 5 = WSS
 6 = FILE
 </code></pre>
+
 
 
 
@@ -1346,7 +1342,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_username (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s username. </p>
+    Get URL's username. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-username">https://url.spec.whatwg.org/#dom-url-username</a>
 
@@ -1363,7 +1359,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s username (except on errors <code>nil</code>)</li>
+        URL's username (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1391,7 +1387,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_password (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s password. </p>
+    Get URL's password. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-password">https://url.spec.whatwg.org/#dom-url-password</a>
 
@@ -1408,7 +1404,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s password (except on errors <code>nil</code>)</li>
+        URL's password (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1437,7 +1433,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_host (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s host, serialized, followed by U+003A (:) and url&rsquo;s port,
+    Get URL's host, serialized, followed by U+003A (:) and url's port,
  serialized. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-host">https://url.spec.whatwg.org/#dom-url-host</a>
@@ -1455,7 +1451,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s host (except on errors <code>nil</code>)</li>
+        URL's host (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1481,7 +1477,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_hostname (url)</strong>
     </dt>
     <dd>
-    Get  URL&rsquo;s host (name only), serialized. </p>
+    Get  URL's host (name only), serialized. </p>
 
 <p> When there is no host, this function returns the empty string.</p>
 
@@ -1500,7 +1496,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s host (name only) (except on errors <code>nil</code>)</li>
+        URL's host (name only) (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1528,7 +1524,8 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_host_type (url)</strong>
     </dt>
     <dd>
-    <p>Get host type from the URL. </p>
+
+<p>Get host type from the URL. </p>
 
 <p> Host type definitions:</p>
 
@@ -1536,6 +1533,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 1 = IPV4:    e.g. "http://127.0.0.1"
 2 = IPV6:    e.g. "http://[2001:db8:3333:4444:5555:6666:7777:8888]"
 </code></pre>
+
 
 
 
@@ -1573,7 +1571,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_port (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s port. </p>
+    Get URL's port. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -1590,7 +1588,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><span class="type">number</span>, <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s port (except on errors <code>nil</code>)</li>
+        URL's port (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1618,7 +1616,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_pathname (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s path. </p>
+    Get URL's path. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-pathname">https://url.spec.whatwg.org/#dom-url-pathname</a>
 
@@ -1635,7 +1633,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s path (except on errors <code>nil</code>)</li>
+        URL's path (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1661,9 +1659,9 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_search (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s search (query). </p>
+    Get URL's search (query). </p>
 
-<p> Return U+003F (?), followed by URL&rsquo;s query.</p>
+<p> Return U+003F (?), followed by URL's query.</p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-search">https://url.spec.whatwg.org/#dom-url-search</a>
 
@@ -1680,7 +1678,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s query (except on errors <code>nil</code>)</li>
+        URL's query (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -1708,9 +1706,9 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>get_hash (url)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s hash (fragment). </p>
+    Get URL's hash (fragment). </p>
 
-<p> Return U+0023 (#), followed by URL&rsquo;s fragment.</p>
+<p> Return U+0023 (#), followed by URL's fragment.</p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-hash">https://url.spec.whatwg.org/#dom-url-hash</a>
 
@@ -1727,7 +1725,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <ol>
         <li>
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> or <span class="type">nil</span></span>
-        URL&rsquo;s fragment (except on errors <code>nil</code>)</li>
+        URL's fragment (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
         error message</li>
@@ -2047,7 +2045,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 </dd>
     <dt>
     <a name = "set_pathname"></a>
-    <strong>set_pathname (url, path)</strong>
+    <strong>set_pathname (url, pathname)</strong>
     </dt>
     <dd>
     Sets path to the URL. </p>
@@ -2061,7 +2059,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL (or part of it) for which to set the path
         </li>
-        <li><span class="parameter">path</span>
+        <li><span class="parameter">pathname</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          the path to set to the URL
         </li>
@@ -2094,7 +2092,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 </dd>
     <dt>
     <a name = "set_search"></a>
-    <strong>set_search (url, search)</strong>
+    <strong>set_search (url, query)</strong>
     </dt>
     <dd>
     Sets search (query) to the URL. </p>
@@ -2108,7 +2106,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          URL (or part of it) for which to set the query string
         </li>
-        <li><span class="parameter">search</span>
+        <li><span class="parameter">query</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
          the query string to set to the URL
         </li>
@@ -2199,7 +2197,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>clear_port (url)</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s port. </p>
+    Clear URL's port. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -2244,7 +2242,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>clear_search (url)</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s search (query string). </p>
+    Clear URL's search (query string). </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -2289,7 +2287,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>clear_hash (url)</strong>
     </dt>
     <dd>
-    Clear URL&rsquo;s hash (fragment). </p>
+    Clear URL's hash (fragment). </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
@@ -2460,7 +2458,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_get (url, key)</strong>
     </dt>
     <dd>
-    Get URL&rsquo;s search parameter&rsquo;s value.
+    Get URL's search parameter's value.
 
 
     <h3>Parameters:</h3>
@@ -2501,7 +2499,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_get_all (url, key)</strong>
     </dt>
     <dd>
-    Get all the URL&rsquo;s search parameter&rsquo;s values.
+    Get all the URL's search parameter's values.
 
 
     <h3>Parameters:</h3>
@@ -2542,7 +2540,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_set (url, key, value)</strong>
     </dt>
     <dd>
-    Set the URL&rsquo;s search parameter&rsquo;s value.
+    Set the URL's search parameter's value.
 
 
     <h3>Parameters:</h3>
@@ -2587,7 +2585,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_append (url, key, value)</strong>
     </dt>
     <dd>
-    Append value to the the URL&rsquo;s search parameter.
+    Append value to the the URL's search parameter.
 
 
     <h3>Parameters:</h3>
@@ -2673,7 +2671,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_remove_value (url, key, value)</strong>
     </dt>
     <dd>
-    Remove search parameter&rsquo;s value from URL.
+    Remove search parameter's value from URL.
 
 
     <h3>Parameters:</h3>
@@ -2688,7 +2686,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
         </li>
         <li><span class="parameter">value</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         search parameter&rsquo;s value
+         search parameter's value
         </li>
     </ul>
 
@@ -2718,7 +2716,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
     <strong>search_sort (url)</strong>
     </dt>
     <dd>
-    Sort the URL&rsquo;s search parameters.
+    Sort the URL's search parameters.
 
 
     <h3>Parameters:</h3>
@@ -3035,7 +3033,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-08-06 13:44:01 </i>
+<i style="float:right;">Last updated 2024-08-06 23:06:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
