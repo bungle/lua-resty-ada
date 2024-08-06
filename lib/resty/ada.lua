@@ -176,7 +176,7 @@ end
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:has_port()
 function mt:has_port()
-  local r = lib.has_port(self[1])
+  local r = lib.ada_has_port(self[1])
   return r
 end
 
