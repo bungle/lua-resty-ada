@@ -5,9 +5,6 @@ return {
   -- filename to store report
   ["reportfile"] = "luacov.report.out",
 
-  -- Run reporter on completion? (won't work for ticks)
-  runreport = true,
-
   -- Patterns for files to include when reporting
   -- all will be included if nothing is listed
   -- (exclude overrules include, do not include

@@ -185,10 +185,18 @@ do
     ".2",
   }
 
-  local library_extensions = {
-    ".so",
-    ".dylib",
-  }
+  local library_extensions
+  if ffi.os == "OSX" then
+    library_extensions = {
+      ".dylib",
+      ".so",
+    }
+  else
+    library_extensions = {
+      ".so",
+      ".dylib",
+    }
+  end
 
   -- try to load ada library from package.cpath
   for _, library_name in ipairs(library_names) do
