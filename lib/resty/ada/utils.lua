@@ -12,6 +12,11 @@ local new_tab = require("table.new")
 local ffi_str = require("ffi").string
 
 
+local tonumber = tonumber
+
+
+
+
 local function ada_string_to_lua(result)
   if result.data == nil then -- nullptr equals to nil but is not falsy
     return nil
