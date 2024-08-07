@@ -27,13 +27,14 @@ local setmetatable = setmetatable
 local function each_iter(entries_iterator)
   if lib.ada_search_params_entries_iter_has_next(entries_iterator) then
     local pair = lib.ada_search_params_entries_iter_next(entries_iterator)
-    local key = pair.key
-    local value = pair.value
     return {
-      key = ada_string_to_lua(key),
-      value = ada_string_to_lua(value),
+      key = ada_string_to_lua(pair.key),
+      value = ada_string_to_lua(pair.value),
     }
   end
+
+  ffi_gc(entries_iterator, nil)
+  lib.ada_free_search_params_entries_iter(entries_iterator)
 end
 
 
@@ -42,6 +43,9 @@ local function each_key_iter(keys_iterator)
     local key = ada_string_to_lua(lib.ada_search_params_keys_iter_next(keys_iterator))
     return key
   end
+
+  ffi_gc(keys_iterator, nil)
+  lib.ada_free_search_params_keys_iter(keys_iterator)
 end
 
 
@@ -50,32 +54,37 @@ local function each_value_iter(values_iterator)
     local value = ada_string_to_lua(lib.ada_search_params_values_iter_next(values_iterator))
     return value
   end
+
+  ffi_gc(values_iterator, nil)
+  lib.ada_free_search_params_values_iter(values_iterator)
 end
 
 
 local function pairs_iter(entries_iterator)
   if lib.ada_search_params_entries_iter_has_next(entries_iterator) then
     local pair = lib.ada_search_params_entries_iter_next(entries_iterator)
-    local key = pair.key
-    local value = pair.value
-    key = ada_string_to_lua(key)
-    value = ada_string_to_lua(value)
+    local key = ada_string_to_lua(pair.key)
+    local value = ada_string_to_lua(pair.value)
     return key, value
   end
+
+  ffi_gc(entries_iterator, nil)
+  lib.ada_free_search_params_entries_iter(entries_iterator)
 end
 
 
 local function ipairs_iter(entries_iterator, invariant_state)
   if lib.ada_search_params_entries_iter_has_next(entries_iterator) then
     local pair = lib.ada_search_params_entries_iter_next(entries_iterator)
-    local key = pair.key
-    local value = pair.value
     local entry = {
-      key = ada_string_to_lua(key),
-      value = ada_string_to_lua(value),
+      key = ada_string_to_lua(pair.key),
+      value = ada_string_to_lua(pair.value),
     }
     return invariant_state + 1, entry
   end
+
+  ffi_gc(entries_iterator, nil)
+  lib.ada_free_search_params_entries_iter(entries_iterator)
 end
 
 
@@ -499,6 +508,31 @@ mt.__tostring = mt.tostring
 -- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
 -- local result = #search
 mt.__len = mt.size
+
+
+---
+-- Destructor Method
+-- @section destructor-method
+
+
+---
+-- Explicitly destroys the Ada URL Search instance and frees the memory.
+--
+-- After calling this function, further calls will result runtime error.
+-- If this is not explicitly called, the memory is freed with garbage
+-- collector.
+--
+-- @function free
+--
+-- @usage
+-- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
+-- search:free()
+function mt:free()
+  ffi_gc(self[1], nil)
+  lib.ada_free_search_params(self[1])
+  self[1] = nil
+  setmetatable(self, nil)
+end
 
 
 ---

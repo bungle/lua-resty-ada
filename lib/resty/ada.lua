@@ -1146,6 +1146,32 @@ end
 
 
 ---
+-- Destructor Method
+-- @section destructor-method
+
+
+---
+-- Explicitly destroys the Ada URL instance and frees the memory.
+--
+-- After calling this function, further calls will result runtime error.
+-- If this is not explicitly called, the memory is freed with garbage
+-- collector.
+--
+-- @function free
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local url = ada.parse("https://user:pass@host:1234/path?search#hash")
+-- url:free()
+function mt:free()
+  ffi_gc(self[1], nil)
+  lib.ada_free(self[1])
+  self[1] = nil
+  setmetatable(self, nil)
+end
+
+
+---
 -- Properties
 -- @section properties
 
