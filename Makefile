@@ -13,7 +13,8 @@ lint:
 
 test: deps
 	@luarocks make
-	@busted --coverage
+	@busted
+	@luacov
 	@echo
 	@awk '/File/,0' luacov.report.out
 	@echo
@@ -24,7 +25,8 @@ test: deps
 
 unit:
 	@luarocks make
-	@busted --coverage
+	@busted
+	@luacov
 	@echo
 	@awk '/File/,0' luacov.report.out
 	@echo
