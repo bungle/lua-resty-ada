@@ -10,7 +10,6 @@ local new_tab = require("table.new")
 
 
 local ffi = require("ffi")
-local ffi_gc = ffi.gc
 local ffi_str = ffi.string
 
 
@@ -30,20 +29,23 @@ end
 
 
 local function ada_strings_to_lua(result)
-  local size = tonumber(lib.ada_strings_size(ffi_gc(result, lib.ada_free_strings)), 10)
+  local size = tonumber(lib.ada_strings_size(result), 10)
   if size == 0 then
+    lib.ada_free_strings(result)
     return {}
   end
   local r = new_tab(size, 0)
   for i = 1, size do
     r[i] = ada_string_to_lua(lib.ada_strings_get(result, i - 1))
   end
+  lib.ada_free_strings(result)
   return r
 end
 
 
 local function ada_owned_string_to_lua(ada_owned_string)
-  local r = ada_string_to_lua(ffi_gc(ada_owned_string, lib.ada_free_owned_string))
+  local r = ada_string_to_lua(ada_owned_string)
+  lib.ada_free_owned_string(ada_owned_string)
   return r
 end
 
