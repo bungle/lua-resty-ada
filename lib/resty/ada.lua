@@ -280,8 +280,7 @@ end
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:get_href()
 function mt:get_href()
-  local h = lib.ada_get_href(self[1])
-  local r = ada_string_to_lua(h)
+  local r = ada_string_to_lua(lib.ada_get_href(self[1]))
   return r
 end
 
@@ -451,8 +450,7 @@ end
 -- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
 -- local res = url:get_port()
 function mt:get_port()
-  local p = lib.ada_get_port(self[1])
-  local r = ada_string_to_lua(p)
+  local r = ada_string_to_lua(lib.ada_get_port(self[1]))
   r = tonumber(r, 10) or r
   return r
 end
@@ -534,8 +532,7 @@ end
 -- local res = url:set_protocol("wss"):get_href()
 function mt:set_href(href)
   assert(type(href) == "string", "invalid href")
-  local ok = lib.ada_set_href(self[1], href, #href)
-  if not ok then
+  if not lib.ada_set_href(self[1], href, #href) then
     return nil, "unable to set href"
   end
   return self
@@ -558,8 +555,7 @@ end
 -- local res = url:set_protocol("wss"):get_href()
 function mt:set_protocol(protocol)
   assert(type(protocol) == "string", "invalid protocol")
-  local ok = lib.ada_set_protocol(self[1], protocol, #protocol)
-  if not ok then
+  if not lib.ada_set_protocol(self[1], protocol, #protocol) then
     return nil, "unable to set protocol"
   end
   return self
@@ -582,8 +578,7 @@ end
 -- local res = url:set_username("guest"):get_href()
 function mt:set_username(username)
   assert(type(username) == "string", "invalid username")
-  local ok = lib.ada_set_username(self[1], username, #username)
-  if not ok then
+  if not lib.ada_set_username(self[1], username, #username) then
     return nil, "unable to set username"
   end
   return self
@@ -606,8 +601,7 @@ end
 -- local res = url:ada_set_password("secret"):get_href()
 function mt:set_password(password)
   assert(type(password) == "string", "invalid password")
-  local ok = lib.ada_set_password(self[1], password, #password)
-  if not ok then
+  if not lib.ada_set_password(self[1], password, #password) then
     return nil, "unable to set password"
   end
   return self
@@ -630,8 +624,7 @@ end
 -- local res = url:set_host("test:4321"):get_href()
 function mt:set_host(host)
   assert(type(host) == "string", "invalid host")
-  local ok = lib.ada_set_host(self[1], host, #host)
-  if not ok then
+  if not lib.ada_set_host(self[1], host, #host) then
     return nil, "unable to set host"
   end
   return self
@@ -654,8 +647,7 @@ end
 -- local res = url:set_hostname("test"):get_href()
 function mt:set_hostname(hostname)
   assert(type(hostname) == "string", "invalid hostname")
-  local ok = lib.ada_set_hostname(self[1], hostname, #hostname)
-  if not ok then
+  if not lib.ada_set_hostname(self[1], hostname, #hostname) then
     return nil, "unable to set hostname"
   end
   return self
@@ -683,8 +675,7 @@ function mt:set_port(port)
   else
     assert(t == "string", "invalid port")
   end
-  local ok = lib.ada_set_port(self[1], port, #port)
-  if not ok then
+  if not lib.ada_set_port(self[1], port, #port) then
     return nil, "unable to set port"
   end
   return self
@@ -707,8 +698,7 @@ end
 -- local res = url:set_pathname("foo"):get_href()
 function mt:set_pathname(pathname)
   assert(type(pathname) == "string", "invalid pathname")
-  local ok = lib.ada_set_pathname(self[1], pathname, #pathname)
-  if not ok then
+  if not lib.ada_set_pathname(self[1], pathname, #pathname) then
     return nil, "unable to set pathname"
   end
   return self
@@ -1333,7 +1323,6 @@ end
 -- @tparam string url URL (or part of it) to check
 -- @treturn boolean `true` if URL can be parsed, otherwise `false`
 -- @see can_parse_with_base
--- @see is_valid
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1353,7 +1342,6 @@ end
 -- @tparam string base base url to check
 -- @treturn boolean `true` if URL can be parsed, otherwise `false`
 -- @see can_parse
--- @see is_valid
 --
 -- @usage
 -- local ada = require("resty.ada")
@@ -1369,27 +1357,10 @@ end
 local U = parse("https://localhost") -- just a dummy init value for this singleton
 
 
----
--- Checks whether the URL is valid.
---
--- @function is_valid
--- @tparam string url URL (or part of it) to validate
--- @treturn boolean|nil `true` if URL is valid, otherwise `false` (except on errors `nil`)
--- @treturn nil|string error message
--- @raise error when url is not a string
--- @see can_parse
--- @see can_parse_with_base
---
--- @usage
--- local ada = require("resty.ada")
--- local res = ada.is_valid("https://user:pass@host:1234/path?search#hash")
-local function is_valid(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
-  end
-  local r = U:is_valid()
-  return r
+local function set_url(url)
+  assert(type(url) == "string", "invalid url")
+  local ok = lib.ada_set_href(U[1], url, #url)
+  return ok
 end
 
 
@@ -1417,9 +1388,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_credentials("https://user:pass@host:1234/path?search#hash")
 local function has_credentials(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_credentials()
   return r
@@ -1442,9 +1412,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_non_empty_username("https://user:pass@host:1234/path?search#hash")
 local function has_non_empty_username(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_non_empty_username()
   return r
@@ -1468,9 +1437,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_password("https://user:pass@host:1234/path?search#hash")
 local function has_password(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_password()
   return r
@@ -1494,9 +1462,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_non_empty_password("https://user:pass@host:1234/path?search#hash")
 local function has_non_empty_password(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_non_empty_password()
   return r
@@ -1519,9 +1486,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_hostname("https://user:pass@host:1234/path?search#hash")
 local function has_hostname(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_hostname()
   return r
@@ -1544,9 +1510,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_empty_hostname("https://user:pass@host:1234/path?search#hash")
 local function has_empty_hostname(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_empty_hostname()
   return r
@@ -1569,9 +1534,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_port("https://user:pass@host:1234/path?search#hash")
 local function has_port(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_port()
   return r
@@ -1594,9 +1558,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_search("https://user:pass@host:1234/path?search#hash")
 local function has_search(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_search()
   return r
@@ -1619,9 +1582,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.has_hash("https://user:pass@host:1234/path?search#hash")
 local function has_hash(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:has_hash()
   return r
@@ -1675,9 +1637,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_components("https://user:pass@host:1234/path?search#hash")
 local function get_components(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_components()
   return r
@@ -1700,9 +1661,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_href("https://user:pass@host:1234/path?search#hash")
 local function get_href(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_href()
   return r
@@ -1725,9 +1685,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_protocol("https://user:pass@host:1234/path?search#hash")
 local function get_protocol(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_protocol()
   return r
@@ -1759,9 +1718,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_scheme_type("https://user:pass@host:1234/path?search#hash")
 local function get_scheme_type(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_scheme_type()
   return r
@@ -1783,9 +1741,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_origin("https://user:pass@host:1234/path?search#hash")
 local function get_origin(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_origin()
   return r
@@ -1810,9 +1767,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_username("https://user:pass@host:1234/path?search#hash")
 local function get_username(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_username()
   return r
@@ -1838,9 +1794,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_password("https://user:pass@host:1234/path?search#hash")
 local function get_password(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_password()
   return r
@@ -1864,9 +1819,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_host("https://user:pass@host:1234/path?search#hash")
 local function get_host(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_host()
   return r
@@ -1893,9 +1847,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_hostname("https://user:pass@host:1234/path?search#hash")
 local function get_hostname(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_hostname()
   return r
@@ -1921,9 +1874,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_host_type("https://user:pass@host:1234/path?search#hash")
 local function get_host_type(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_host_type()
   return r
@@ -1948,9 +1900,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_port("https://user:pass@host:1234/path?search#hash")
 local function get_port(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_port()
   return r
@@ -1973,9 +1924,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_pathname("https://user:pass@host:1234/path?search#hash")
 local function get_pathname(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_pathname()
   return r
@@ -2002,9 +1952,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_search("https://user:pass@host:1234/path?search#hash")
 local function get_search(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_search()
   return r
@@ -2031,9 +1980,8 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.get_hash("https://user:pass@host:1234/path?search#hash")
 local function get_hash(url)
-  local ok, err = U:set_href(url)
-  if not ok then
-    return nil, err
+  if not set_url(url) then
+    return nil, "invalid url"
   end
   local r = U:get_hash()
   return r
@@ -2062,15 +2010,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_protocol("https://user:pass@host:1234/path?search#hash", "wss")
 local function set_protocol(url, protocol)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_protocol(protocol)
-  if not r then
-    return nil, e
+  local u, err = U:set_protocol(protocol)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2094,15 +2041,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_username("https://user:pass@host:1234/path?search#hash", "guest")
 local function set_username(url, username)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_username(username)
-  if not r then
-    return nil, e
+  local u, err = U:set_username(username)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2127,15 +2073,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_password("https://user:pass@host:1234/path?search#hash", "secret")
 local function set_password(url, password)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_password(password)
-  if not r then
-    return nil, e
+  local u, err = U:set_password(password)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2157,15 +2102,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_host("https://user:pass@host:1234/path?search#hash", "test:4321")
 local function set_host(url, host)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_host(host)
-  if not r then
-    return nil, e
+  local u, err = U:set_host(host)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2189,15 +2133,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_hostname("https://user:pass@host:1234/path?search#hash", "test")
 local function set_hostname(url, hostname)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_hostname(hostname)
-  if not r then
-    return nil, e
+  local u, err = U:set_hostname(hostname)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2221,15 +2164,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_port("https://user:pass@host:1234/path?search#hash", 4321)
 local function set_port(url, port)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_port(port)
-  if not r then
-    return nil, e
+  local u, err = U:set_port(port)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2251,15 +2193,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_pathname("https://user:pass@host:1234/path?search#hash", "foo")
 local function set_pathname(url, pathname)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_pathname(pathname)
-  if not r then
-    return nil, e
+  local u, err = U:set_pathname(pathname)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2283,15 +2224,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_search("https://user:pass@host:1234/path?search#hash", "q=1&done")
 local function set_search(url, query)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_search(query)
-  if not r then
-    return nil, e
+  local u, err = U:set_search(query)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2315,15 +2255,14 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.set_hash("https://user:pass@host:1234/path?search#hash", "home")
 local function set_hash(url, hash)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r, e = U:set_hash(hash)
-  if not r then
-    return nil, e
+  local u, err = U:set_hash(hash)
+  if err then
+    return nil, err
   end
-  r = U:get_href()
+  local r = u:get_href()
   return r
 end
 
@@ -2351,11 +2290,10 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.clear_port("https://user:pass@host:1234/path?search#hash")
 local function clear_port(url)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r = U:clear_port():get_href()
+  local r = U:clear_port():get_href()
   return r
 end
 
@@ -2378,11 +2316,10 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.clear_search("https://user:pass@host:1234/path?search#hash")
 local function clear_search(url)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r = U:clear_search():get_href()
+  local r = U:clear_search():get_href()
   return r
 end
 
@@ -2405,11 +2342,10 @@ end
 -- local ada = require("resty.ada")
 -- local res = ada.clear_hash("https://user:pass@host:1234/path?search#hash")
 local function clear_hash(url)
-  local r, e = U:set_href(url)
-  if not r then
-    return nil, e
+  if not set_url(url) then
+    return nil, "invalid url"
   end
-  r = U:clear_hash():get_href()
+  local r = U:clear_hash():get_href()
   return r
 end
 
@@ -2435,8 +2371,8 @@ local function search_parse(url)
   if err then
     return nil, err
   end
-  s = search.parse(s or "")
-  return s
+  local r = search.parse(s or "")
+  return r
 end
 
 
@@ -2817,7 +2753,6 @@ return {
   idna_to_unicode = idna_to_unicode,
   can_parse = can_parse,
   can_parse_with_base = can_parse_with_base,
-  is_valid = is_valid,
   has_credentials = has_credentials,
   has_non_empty_username = has_non_empty_username,
   has_password = has_password,
