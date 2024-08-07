@@ -15,9 +15,7 @@ local ada_string_to_lua = utils.ada_string_to_lua
 local ada_owned_string_to_lua = utils.ada_owned_string_to_lua
 
 
-
-local ffi = require("ffi")
-local ffi_gc = ffi.gc
+local ffi_gc = require("ffi").gc
 
 
 local fmt = string.format

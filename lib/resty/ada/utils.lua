@@ -9,8 +9,7 @@ local lib = require("resty.ada.lib")
 local new_tab = require("table.new")
 
 
-local ffi = require("ffi")
-local ffi_str = ffi.string
+local ffi_str = require("ffi").string
 
 
 local tonumber = tonumber
