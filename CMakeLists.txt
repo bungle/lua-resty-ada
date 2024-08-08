@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(ada
+project(
+  ada
   DESCRIPTION "Fast spec-compliant URL parser"
   LANGUAGES C CXX
   VERSION 2.9.0
