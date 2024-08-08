@@ -1,39 +1,40 @@
-.PHONY: deps lint test unit docs
+.PHONY: build copy-library luarocks-install lint unit coverage test docs clean install
 
-BUILD_DIR := $(shell mktemp -d)
+LIBRARY := libada.so
+ifeq ($(shell uname), Darwin)
+  LIBRARY := libada.dylib
+endif
 
-deps:
-	@cmake -S deps/ada -B $(BUILD_DIR)
-	@cmake --build $(BUILD_DIR)
-	@cp $(BUILD_DIR)/libada.* .
-	@rm -Rf $(BUILD_DIR)
+build:
+	@cmake -B build
+	@cmake --build build
+
+copy-library: build
+	@cp $ build/$(LIBRARY) .
+
+luarocks-install:
+	@luarocks make
 
 lint:
-	@luacheck -q ./lib
-
-test: deps
-	@luarocks make
-	@busted
-	@luacov
-	@echo
-	@awk '/File/,0' luacov.report.out
-	@echo
-	@echo Lint
-	@echo -----------------------------------------------------------------------------------
-	@luacheck -q ./lib
-	@echo
+	@luacheck ./lib
 
 unit:
-	@luarocks make
 	@busted
+
+coverage: unit
 	@luacov
 	@echo
 	@awk '/File/,0' luacov.report.out
 	@echo
-	@echo Lint
-	@echo -----------------------------------------------------------------------------------
-	@luacheck -q ./lib
-	@echo
+
+test: copy-library luarocks-install coverage lint
 
 docs:
 	@ldoc .
+
+clean:
+	@rm -Rf build luacov.stats.out luacov.report.out $(LIBRARY)
+
+install: deps
+	@luarocks make
+	@cmake --install build
