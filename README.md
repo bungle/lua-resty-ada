@@ -1,11 +1,11 @@
 # lua-resty-ada
 
-**lua-resty-ada** implements a LuaJIT FFI bindings to Ada — WHATWG-compliant and fast URL parser.
-
+**lua-resty-ada** implements a LuaJIT FFI bindings to
+[Ada — WHATWG-compliant and fast URL parser](https://github.com/ada-url/ada/).
 
 ## Status
 
-This library is considered production ready when 1.0.0 is released (not yet).
+This library is considered production ready.
 
 
 ## Synopsis
@@ -21,6 +21,9 @@ print(tostring(url))
 print(tostring(url:clear_port())) -- there are many more methods
 -- prints: https://www.xn--7eleven-506c.com/Privacy/Montr%C3%A9al
 
+url:free()
+-- explicitly frees the memory without waiting for the garbage collector
+
 -- There is also a static API
 
 print(ada.get_href("https://www.7‑Eleven.com:1234/Home/../Privacy/Montréal"))
@@ -34,6 +37,45 @@ print(ada.clear_port("https://www.7‑Eleven.com:1234/Home/../Privacy/Montréal"
 ## API
 
 LDoc generated API docs can be viewed at [bungle.github.io/lua-resty-ada](https://bungle.github.io/lua-resty-ada/).
+
+
+## Installation
+
+### Using OpenResty Package Manager
+
+```bash
+❯ opm get bungle/lua-resty-ada
+```
+
+OPM repository for `lua-resty-ada` is located at
+[opm.openresty.org/package/bungle/lua-resty-ada](https://opm.openresty.org/package/bungle/lua-resty-ada/).
+
+### Using LuaRocks
+
+```bash
+❯ luarocks install lua-resty-ada
+```
+
+LuaRocks repository for `lua-resty-ada` is located at
+[luarocks.org/modules/bungle/lua-resty-ada](https://luarocks.org/modules/bungle/lua-resty-session).
+
+### Building Ada
+
+Please consult [Ada](https://github.com/ada-url/ada/) on how to build or install
+the ada library. The Ada library needs to installed in in the system library path or
+one of the paths in Lua's `package.cpath`.
+
+This project can also build it by executing (requires [cmake](https://cmake.org/)):
+
+```bash
+❯ make build
+```
+
+Or run the test suite with [act](https://github.com/nektos/act):
+
+```bash
+❯ act
+```
 
 
 # License
