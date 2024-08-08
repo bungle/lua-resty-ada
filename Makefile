@@ -1,4 +1,4 @@
-.PHONY: build copy-library luarocks-install lint unit coverage test docs clean install
+.PHONY: build copy-library luarocks-install lint unit coverage test docs clean install-rock install-lib install
 
 LIBRARY := libada.so
 ifeq ($(shell uname), Darwin)
@@ -10,7 +10,7 @@ build:
 	@cmake --build build
 
 copy-library: build
-	@cp $ build/$(LIBRARY) .
+	@cp build/$(LIBRARY) .
 
 luarocks-install:
 	@luarocks make
@@ -32,9 +32,13 @@ test: copy-library luarocks-install coverage lint
 docs:
 	@ldoc .
 
+install-rock:
+	@luarocks make
+
+install-lib: build
+	@cmake --install build
+
+install: install-rock install-lib
+
 clean:
 	@rm -Rf build luacov.stats.out luacov.report.out $(LIBRARY)
-
-install: deps
-	@luarocks make
-	@cmake --install build
