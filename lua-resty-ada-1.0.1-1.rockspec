@@ -1,8 +1,8 @@
 package = "lua-resty-ada"
-version = "1.0.0-1"
+version = "1.0.1-1"
 source = {
   url = "git+https://github.com/bungle/lua-resty-ada.git",
-  tag = "v1.0.0",
+  tag = "v1.0.1",
 }
 description = {
   summary = "LuaJIT FFI bindings to Ada — WHATWG-compliant and fast URL parser",
