@@ -1,5 +1,6 @@
 return {
   default = {
+    lua      = "resty",
     verbose  = true,
     coverage = true,
     output   = "gtest",
