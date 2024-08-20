@@ -46,26 +46,6 @@ mt.__index = mt
 
 
 ---
--- Validate Methods
--- @section validate-methods
-
-
----
--- Checks whether the URL is valid.
---
--- @function is_valid
--- @treturn boolean `true` if URL is valid, otherwise `false`
---
--- @usage
--- local url = require("resty.ada").parse("https://user:pass@host:1234/path?search#hash")
--- local res = url:is_valid()
-function mt:is_valid()
-  local r = lib.ada_is_valid(self[1])
-  return r
-end
-
-
----
 -- Has Methods
 -- @section has-methods
 
@@ -2249,11 +2229,7 @@ local function set_search(url, query)
   if not set_url(url) then
     return nil, "invalid url"
   end
-  local u, err = U:set_search(query)
-  if err then
-    return nil, err
-  end
-  local r = u:get_href()
+  local r = U:set_search(query):get_href()
   return r
 end
 
@@ -2280,11 +2256,7 @@ local function set_hash(url, hash)
   if not set_url(url) then
     return nil, "invalid url"
   end
-  local u, err = U:set_hash(hash)
-  if err then
-    return nil, err
-  end
-  local r = u:get_href()
+  local r = U:set_hash(hash):get_href()
   return r
 end
 
