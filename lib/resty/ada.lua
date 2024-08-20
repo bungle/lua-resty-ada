@@ -26,7 +26,7 @@ local setmetatable = setmetatable
 
 
 local _OMITTED = 0xffffffff
-local _VERSION = "1.0.0"
+local _VERSION = "1.0.1"
 
 
 local function parse_component(c, raw)
@@ -1186,6 +1186,8 @@ local function parse(url)
   assert(type(url) == "string", "invalid url")
   local u = ffi_gc(lib.ada_parse(url, #url), lib.ada_free)
   if not lib.ada_is_valid(u) then
+    ffi_gc(u, nil)
+    lib.ada_free(u)
     return nil, "invalid url"
   end
   local self = setmetatable({ u }, mt)
@@ -1213,6 +1215,8 @@ local function parse_with_base(url, base)
   assert(type(base) == "string", "invalid base")
   local u = ffi_gc(lib.ada_parse_with_base(url, #url, base, #base), lib.ada_free)
   if not lib.ada_is_valid(u) then
+    ffi_gc(u, nil)
+    lib.ada_free(u)
     return nil, "invalid url or base"
   end
   local self = setmetatable({ u }, mt)
