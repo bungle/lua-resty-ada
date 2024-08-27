@@ -7,6 +7,7 @@ local it = it
 local tostring = tostring
 
 
+local null = ngx.null
 local same = assert.same
 local equal = assert.equal
 local is_nil = assert.is_nil
@@ -68,6 +69,25 @@ describe("Ada", function()
       end)
       it("accepts valid url", function()
         is_true(ada.can_parse_with_base("/path?search#hash", "http://www.google.com"))
+      end)
+    end)
+    describe(".decode", function()
+      it("works", function()
+        same({
+          scheme_type = 2,
+          protocol = "https:",
+          username = "user",
+          password = "pass",
+          origin = "https://example.com:1234",
+          host_type = 0,
+          host = "example.com:1234",
+          hostname = "example.com",
+          port = 1234,
+          pathname = "/foo/bar",
+          search = "?baz",
+          hash = "#quux",
+        }, ada.decode("https://user:pass@example.com:1234/foo/bar?baz#quux"))
+        is_err("invalid url", ada.decode("<invalid>"))
       end)
     end)
     describe(".has_credentials", function()
@@ -275,7 +295,7 @@ describe("Ada", function()
         is_table(u:set_username("user"))
         equal("user", u:get_username())
         is_err("invalid url", ada.set_username("<invalid>", "user"))
-        is_err("unable to set username", ada.set_username("file:///doge", "pass"))
+        is_err("unable to set username", ada.set_username("file:///doge", "user"))
       end)
     end)
     describe(".set_password", function()
@@ -310,6 +330,9 @@ describe("Ada", function()
     end)
     describe(".set_port", function()
       it("works", function()
+        errors(function() ada.set_port("https://host/", 0/0) end, "invalid port")
+        errors(function() ada.set_port("https://host/", 1/0) end, "invalid port")
+        errors(function() ada.set_port("https://host/", -1/0) end, "invalid port")
         equal("https://www.xn--7eleven-506c.com:1234/Home/Privacy/Montr%C3%A9al", ada.set_port("https://www.7‑Eleven.com:443/Home/Privacy/Montréal", 1234))
         local u = ada.parse("https://www.7‑Eleven.com:443/Home/Privacy/Montréal")
         is_table(u:set_port(1234))
@@ -327,7 +350,6 @@ describe("Ada", function()
         equal("/foo/bar", u:get_pathname())
         is_err("invalid url", ada.set_pathname("<invalid>", "/Doge"))
         is_err("unable to set pathname", ada.set_pathname("mailto:user@example.org", "/doge"))
-
       end)
     end)
     describe(".set_search", function()
@@ -386,6 +408,38 @@ describe("Ada", function()
         equal("doge=z&jack=2", s:tostring())
 
         is_err("invalid url", ada.search_parse("<invalid>"))
+      end)
+    end)
+    describe(".search_encode", function()
+      it("works", function()
+        equal("doge=z&jack=2", ada.search_encode("https://www.google.com?doge=z&jack=2"))
+        equal("", ada.search_encode("https://www.google.com"))
+        equal("", ada.search_encode("https://www.google.com?"))
+        equal("c=&e=&e=v&f=v", ada.search.encode({ a = false, b = nil, c = "", d = {}, e = { false, "", "v" }, f = "v" }))
+        errors(function() ada.search.encode({ k = null }) end, "invalid value")
+        errors(function() ada.search.encode({ k = 0/0 }) end, "invalid value")
+        errors(function() ada.search.encode({ k = 1/0 }) end, "invalid value")
+        errors(function() ada.search.encode({ k = -1/0 }) end, "invalid value")
+        equal("", ada.search.encode({}))
+        is_err("invalid url", ada.search_encode("<invalid>"))
+      end)
+    end)
+    describe(".search_decode", function()
+      it("works", function()
+        same({ doge = "z", jack = "2" }, ada.search_decode("https://www.google.com?doge=z&jack=2&doge=x"))
+        same({}, ada.search_decode("https://www.google.com"))
+        same({ doge = "z", jack = "2" }, ada.parse("https://www.google.com?doge=z&jack=2&doge=x"):search_decode())
+        same({}, ada.parse("https://www.google.com"):search_decode())
+        is_err("invalid url", ada.search_decode("<invalid>"))
+      end)
+    end)
+    describe(".search_decode_all", function()
+      it("works", function()
+        same({ doge = { "z", "x" }, jack = { "2" } }, ada.search_decode_all("https://www.google.com?doge=z&jack=2&doge=x"))
+        same({}, ada.search_decode_all("https://www.google.com"))
+        same({ doge = { "z", "x" }, jack = { "2" } }, ada.parse("https://www.google.com?doge=z&jack=2&doge=x"):search_decode_all())
+        same({}, ada.parse("https://www.google.com"):search_decode_all())
+        is_err("invalid url", ada.search_decode_all("<invalid>"))
       end)
     end)
     describe(".search_has", function()
