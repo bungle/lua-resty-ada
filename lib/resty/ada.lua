@@ -13,12 +13,12 @@ local search = require("resty.ada.search")
 
 local ada_string_to_lua = utils.ada_string_to_lua
 local ada_owned_string_to_lua = utils.ada_owned_string_to_lua
+local number_to_string = utils.number_to_string
 
 
 local ffi_gc = require("ffi").gc
 
 
-local fmt = string.format
 local type = type
 local assert = assert
 local tonumber = tonumber
@@ -633,12 +633,14 @@ end
 ---
 -- Sets port to the URL.
 --
+-- Note: inf, -inf and NaN are considered invalid and they raise an error.
+--
 -- See: <https://url.spec.whatwg.org/#dom-url-port>
 --
 -- @function set_port
 -- @tparam number|string port the port to set to the URL
 -- @treturn url|nil self (except on errors `nil`)
--- @treturn nil|string error message
+-- @treturn nil|string error message (e.g. when port is out of acceptable range)
 -- @raise error when port is not a number or a string
 --
 -- @usage
@@ -647,7 +649,7 @@ end
 function mt:set_port(port)
   local t = type(port)
   if t == "number" then
-    port = fmt("%d", port)
+    port = assert(number_to_string(port), "invalid port")
   else
     assert(t == "string", "invalid port")
   end
