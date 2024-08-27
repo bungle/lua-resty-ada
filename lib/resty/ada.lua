@@ -45,6 +45,59 @@ local mt = {
 mt.__index = mt
 
 
+
+---
+-- Decode Methods
+-- @section decode-methods
+
+
+---
+-- Decodes URL and return its components in Lua table.
+--
+-- Given a following URL:
+--    https://user:pass@example.com:1234/foo/bar?baz#quux
+--
+-- This function will return following table:
+--    {
+--      scheme_type = 2,
+--      protocol = "https:",
+--      username = "user",
+--      password = "pass",
+--      origin = "https://example.com:1234",
+--      host_type = 0,
+--      host = "example.com:1234",
+--      hostname = "example.com",
+--      port = 1234,
+--      pathname = "/foo/bar",
+--      search = "?baz",
+--      hash = "#quux",
+--    }
+--
+-- @function decode
+-- @treturn table table of URL components
+--
+-- @usage
+-- local url = require("resty.ada").parse(
+--   "https://user:pass@host:1234/path?search#hash")
+-- local res = url:decode()
+function mt:decode()
+  return {
+    scheme_type = self:get_scheme_type(),
+    protocol = self:get_protocol(),
+    username = self:get_username(),
+    password = self:get_password(),
+    origin = self:get_origin(),
+    host_type = self:get_host_type(),
+    host = self:get_host(),
+    hostname = self:get_hostname(),
+    port = self:get_port(),
+    pathname = self:get_pathname(),
+    search = self:get_search(),
+    hash = self:get_hash(),
+  }
+end
+
+
 ---
 -- Has Methods
 -- @section has-methods
@@ -800,6 +853,52 @@ end
 
 
 ---
+-- Decodes search parameters from URL and returns a Lua table of them.
+--
+-- If same parameter appears multiple times, only the value of the
+-- first is returned.
+--
+-- An example return value:
+--    {
+--      key1 = "value",
+--      key2 = "value2",
+--    }
+--
+-- @function search_decode
+-- @treturn table a table of all search parameters (a string:string map).
+--
+-- @usage
+-- local url = require("resty.ada").parse("http://host/?a=b&c=d&e=f&a=g")
+-- local result = url:search_decode()
+function mt:search_decode()
+  local r = search.decode(self:get_search() or "")
+  return r
+end
+
+
+---
+-- Decodes all search parameters from URL and returns a Lua table of them.
+--
+-- An example return value:
+--    {
+--      key1 = { "first", "second", },
+--      key2 = { "value" },
+--    }
+--
+-- @function search_decode_all
+-- @tparam string url url (with search) to parse
+-- @treturn table a table of all search parameters (a string:table [array] map).
+--
+-- @usage
+-- local url = require("resty.ada").parse("http://host/?a=b&a=c&d=e")
+-- local result = url:search_decode_all()
+function mt:search_decode_all()
+  local r = search.decode_all(self:get_search() or "")
+  return r
+end
+
+
+---
 -- Checks whether the url has a search with a key.
 --
 -- @function search_has
@@ -1362,13 +1461,60 @@ local function can_parse_with_base(url, base)
 end
 
 
-local U = parse("https://localhost") -- just a dummy init value for this singleton
+local U = parse("file:") -- just a dummy init value for this singleton
 
 
 local function set_url(url)
   assert(type(url) == "string", "invalid url")
   local ok = lib.ada_set_href(U[1], url, #url)
   return ok
+end
+
+
+---
+-- Decode Functions
+-- @section decode-functions
+
+
+---
+-- Decodes URL and return its components in Lua table.
+--
+-- Given a following URL:
+--    https://user:pass@example.com:1234/foo/bar?baz#quux
+--
+-- This function will return the following table:
+--
+--    {
+--      origin = "https://example.com:1234",
+--      scheme_type = 2,
+--      protocol = "https:",
+--      username = "user",
+--      password = "pass",
+--      host_type = 0,
+--      host = "example.com:1234",
+--      hostname = "example.com",
+--      port = 1234,
+--      pathname = "/foo/bar",
+--      search = "?baz",
+--      hash = "#quux",
+--    }
+--
+-- The missing ones will be returned as empty string `""` (rather than `nil`).
+--
+-- @function decode
+-- @treturn table|nil table of URL components (except on errors `nil`)
+-- @treturn nil|string error message
+-- @raise error when url is not a string
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local res = ada.decode("https://user:pass@host:1234/path?search#hash")
+local function decode(url)
+  if not set_url(url) then
+    return nil, "invalid url"
+  end
+  local r = U:decode()
+  return r
 end
 
 
@@ -2365,13 +2511,101 @@ end
 -- @raise error when url is not a string
 --
 -- @usage
--- local search = require("resty.ada.search").parse("a=b&c=d&e=f")
+-- local ada = require("resty.ada")
+-- local res = ada.search_parse("http://host/?a=b&c=d&e=f&a=g")
 local function search_parse(url)
   local s, err = get_search(url)
   if err then
     return nil, err
   end
   local r = search.parse(s or "")
+  return r
+end
+
+
+---
+-- Encodes search parameters from URL and returns an query string.
+--
+-- @function search_encode
+-- @tparam string url url (with search) to parse
+-- @treturn string encoded query string
+-- @raise error when url is not a string
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local res = ada.search_encode("http://host/?a=b&c=d&e=f&a=g")
+local function search_encode(url)
+  local s, err = get_search(url)
+  if err then
+    return nil, err
+  end
+  local r = search.encode(s or "")
+  return r
+end
+
+
+---
+-- Decodes search parameters from URL and returns a Lua table of them.
+--
+-- If same parameter appears multiple times, only the value of the
+-- first is returned.
+--
+-- Given the following URL:
+--    "http://host/?a=b&c=d&e=f&a=g"
+--
+-- The following table is returned:
+--    {
+--      a = "b",
+--      c = "d",
+--      e = "f",
+--    }
+--
+-- @function search_decode
+-- @tparam string url url (with search) to parse
+-- @treturn table|nil a table of all search parameters (a string:string map).
+-- @treturn nil|string error message
+-- @raise error when url is not a string
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local res = ada.search_decode("http://host/?a=b&c=d&e=f&a=g")
+local function search_decode(url)
+  local s, err = get_search(url)
+  if err then
+    return nil, err
+  end
+  local r = search.decode(s or "")
+  return r
+end
+
+
+---
+-- Decodes all search parameters and returns a Lua table of them.
+--
+-- Given the following URL:
+--    "http://host/?a=b&a=c&d=e""
+--
+-- The following table is returned:
+--    {
+--      a = { "b", "c" },
+--      d = { "e" },
+--    }
+--
+-- @function search_decode_all
+-- @tparam string url url (with search) to parse
+-- @treturn table|nil a table of all search parameters (a string:table [array] map).
+-- @treturn nil|string error message
+-- @raise error when url is not a string
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local res = ada.search_decode_all("http://host/?a=b&a=c&d=e")
+local function search_decode_all(url)
+  local s, err = get_search(url)
+  if err then
+    return nil, err
+  end
+  local r = search.decode_all(s or "")
   return r
 end
 
@@ -2753,6 +2987,7 @@ return {
   idna_to_unicode = idna_to_unicode,
   can_parse = can_parse,
   can_parse_with_base = can_parse_with_base,
+  decode = decode,
   has_credentials = has_credentials,
   has_non_empty_username = has_non_empty_username,
   has_password = has_password,
@@ -2789,6 +3024,9 @@ return {
   clear_search = clear_search,
   clear_hash = clear_hash,
   search_parse = search_parse,
+  search_encode = search_encode,
+  search_decode = search_decode,
+  search_decode_all = search_decode_all,
   search_has = search_has,
   search_has_value = search_has_value,
   search_get = search_get,

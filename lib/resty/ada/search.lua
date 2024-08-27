@@ -13,12 +13,15 @@ local utils = require("resty.ada.utils")
 local ada_string_to_lua = utils.ada_string_to_lua
 local ada_strings_to_lua = utils.ada_strings_to_lua
 local ada_owned_string_to_lua = utils.ada_owned_string_to_lua
+local number_to_string = utils.number_to_string
 
 
 local ffi_gc = require("ffi").gc
 
 
 local type = type
+local next = next
+local pairs = pairs
 local assert = assert
 local tonumber = tonumber
 local setmetatable = setmetatable
@@ -92,6 +95,72 @@ local mt = {}
 
 
 mt.__index = mt
+
+
+---
+-- Decode Methods
+-- @section decode-methods
+
+
+---
+-- Decodes search parameters and returns a Lua table of them.
+--
+-- If same parameter appears multiple times, only the value of the
+-- first is returned.
+--
+-- An example return value:
+--    {
+--      key1 = "value",
+--      key2 = "value2",
+--    }
+--
+-- @function decode
+-- @treturn table a table of all search parameters (a string:string map).
+--
+-- @usage
+-- local search = require("resty.ada.search").parse("a=b&c=d&e=f&a=g")
+-- local result = search:decode()
+function mt:decode()
+  if self:size() == 0 then
+    return {}
+  end
+  local r = {}
+  for k in self:each_key() do
+    if not r[k] then
+      r[k] = self:get(k)
+    end
+  end
+  return r
+end
+
+
+---
+-- Decodes all search parameters and returns a Lua table of them.
+--
+-- An example return value:
+--    {
+--      key1 = { "first", "second", },
+--      key2 = { "value" },
+--    }
+--
+-- @function decode
+-- @treturn table a table of all search parameters (a string:table [array] map).
+--
+-- @usage
+-- local search = require("resty.ada.search").parse("a=b&a=c&d=e")
+-- local result = search:decode_all()
+function mt:decode_all()
+  if self:size() == 0 then
+    return {}
+  end
+  local r = {}
+  for k in self:each_key() do
+    if not r[k] then
+      r[k] = self:get_all(k)
+    end
+  end
+  return r
+end
 
 
 ---
@@ -572,6 +641,142 @@ local S = parse("") -- just a dummy init value for this singleton
 
 
 ---
+-- Encode and Decode Functions
+-- @section encode-and-decode-function
+
+
+local function encode_value(v)
+  if v == true or v == "" then
+    return ""
+  end
+
+  if type(v) == "number" then
+    v = number_to_string(v)
+  end
+
+  return v
+end
+
+
+---
+-- Encodes search parameters and returns an query string.
+--
+-- * only `string` keys are allowed.
+-- * only `string`, `boolean` and `number` values are allowed or an array of them
+-- * `false` value is treated as missing (same as `nil`)
+-- * `true` returns `""` (empty string)
+-- * negative and positive `inf` and `NaN` are not allowed as numbers in values
+--
+-- When passing a table the keys will be sorted and with string the given order
+-- is preserved.
+--
+-- @function encode
+-- @tparam table|string params search parameters to encode (either a `table` or `string`)
+-- @treturn string encoded query string
+-- @raise error when search or key is not a table or string, or when the rules above are not followed
+--
+-- @usage
+-- local search = require("resty.ada.search")
+-- local result = search.encode({
+--   g = "h",
+--   a = { "f", "b", },
+--   c = "d",
+-- })
+local function encode(params)
+  if type(params) == "table" then
+    if not next(params) then
+      return ""
+    end
+
+    S:reset("")
+
+    for k, v in pairs(params) do
+      if v ~= false then
+        if type(v) == "table" then
+          for i = 1, #v do
+            if v[i] then
+              S:append(k, encode_value(v[i]))
+            end
+          end
+
+        else
+          S:append(k, encode_value(v))
+        end
+      end
+    end
+
+    S:sort()
+
+  else
+    if params == "" or params == "?" then
+      return ""
+    end
+
+    S:reset(params)
+  end
+
+  local r = S:tostring()
+  return r
+end
+
+
+---
+-- Decodes search parameters and returns a Lua table of them.
+--
+-- If same parameter appears multiple times, only the value of the
+-- first is returned.
+--
+-- Given the following query string:
+--    "a=b&c=d&e=f&a=g"
+--
+-- The following table is returned:
+--    {
+--      a = "b",
+--      c = "d",
+--      e = "f",
+--    }
+--
+-- @function decode
+-- @tparam string search search to parse
+-- @treturn table a table of all search parameters (a string:string map).
+-- @raise error when search or key is not a string
+--
+-- @usage
+-- local search = require("resty.ada.search")
+-- local result = search.decode("a=b&c=d&e=f&a=g")
+local function decode(search)
+  local r = S:reset(search):decode()
+  return r
+end
+
+
+---
+-- Decodes all search parameters and returns a Lua table of them.
+--
+-- Given the following query string:
+--    "a=b&a=c&d=e""
+--
+-- The following table is returned:
+--    {
+--      a = { "b", "c" },
+--      d = { "e" },
+--    }
+--
+-- @function decode_all
+-- @tparam string search search to parse
+-- @treturn table a table of all search parameters (a string:table [array] map).
+-- @raise error when search or key is not a string
+--
+-- @usage
+-- local search = require("resty.ada.search")
+-- local result = search.decode_all("a=b&a=c&d=e")
+local function decode_all(search)
+  local r = S:reset(search):decode_all()
+  return r
+end
+
+
+---
 -- Has Functions
 -- @section has-functions
 
@@ -902,6 +1107,9 @@ end
 
 return {
   parse = parse,
+  encode = encode,
+  decode = decode,
+  decode_all = decode_all,
   has = has,
   has_value = has_value,
   get = get,
