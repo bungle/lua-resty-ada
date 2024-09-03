@@ -37,6 +37,7 @@
 <li><a href="#Constructors">Constructors </a></li>
 <li><a href="#Convert_Functions">Convert Functions </a></li>
 <li><a href="#Validate_Functions">Validate Functions </a></li>
+<li><a href="#Decode_Functions">Decode Functions </a></li>
 <li><a href="#Has_Functions">Has Functions </a></li>
 <li><a href="#Get_Functions">Get Functions </a></li>
 <li><a href="#Set_Functions">Set Functions </a></li>
@@ -98,6 +99,13 @@
 	<tr>
 	<td class="name" nowrap><a href="#can_parse_with_base">can_parse_with_base (url, base)</a></td>
 	<td class="summary">Checks whether the URL can be parsed with a base URL.</td>
+	</tr>
+</table>
+<h2><a href="#Decode_Functions">Decode Functions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#decode">decode ()</a></td>
+	<td class="summary">Decodes URL and return its components in Lua table.</td>
 	</tr>
 </table>
 <h2><a href="#Has_Functions">Has Functions </a></h2>
@@ -258,6 +266,18 @@
 	<tr>
 	<td class="name" nowrap><a href="#search_parse">search_parse (url)</a></td>
 	<td class="summary">Parses search from URL and returns an instance of Ada URL Search.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search_encode">search_encode (url)</a></td>
+	<td class="summary">Encodes search parameters from URL and returns an query string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search_decode">search_decode (url)</a></td>
+	<td class="summary">Decodes search parameters from URL and returns a Lua table of them.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#search_decode_all">search_decode_all (url)</a></td>
+	<td class="summary">Decodes all search parameters and returns a Lua table of them.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search_has">search_has (url, key)</a></td>
@@ -640,6 +660,63 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
         <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
 <span class="keyword">local</span> ok = ada.<span class="function-name">can_parse_with_base</span>(<span class="string">"/path?search#hash"</span>,
                                    <span class="string">"https://user:pass@host:1234"</span>)</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Decode_Functions"></a>Decode Functions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "decode"></a>
+    <strong>decode ()</strong>
+    </dt>
+    <dd>
+    Decodes URL and return its components in Lua table.</p>
+
+<p> Given a following URL:
+    https://user:pass@example.com:1234/foo/bar?baz#quux</p>
+
+<p> This function will return the following table:</p>
+
+<pre><code>{
+  origin = "https://example.com:1234",
+  scheme_type = 2,
+  protocol = "https:",
+  username = "user",
+  password = "pass",
+  host_type = 0,
+  host = "example.com:1234",
+  hostname = "example.com",
+  port = 1234,
+  pathname = "/foo/bar",
+  search = "?baz",
+  hash = "#quux",
+}
+</code></pre>
+
+<p> The missing ones will be returned as empty string <code>&quot;&quot;</code> (rather than <code>nil</code>).
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <span class="type">nil</span></span>
+        table of URL components (except on errors <code>nil</code>)</li>
+        <li>
+           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        error message</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    error when url is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
+<span class="keyword">local</span> res = ada.<span class="function-name">decode</span>(<span class="string">"https://user:pass@host:1234/path?search#hash"</span>)</pre>
     </ul>
 
 </dd>
@@ -2306,7 +2383,138 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 
     <h3>Usage:</h3>
     <ul>
-        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>).<span class="function-name">parse</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>)</pre>
+        <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
+<span class="keyword">local</span> res = ada.<span class="function-name">search_parse</span>(<span class="string">"http://host/?a=b&amp;c=d&amp;e=f&amp;a=g"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search_encode"></a>
+    <strong>search_encode (url)</strong>
+    </dt>
+    <dd>
+    Encodes search parameters from URL and returns an query string.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">url</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         url (with search) to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        encoded query string
+    </ol>
+
+    <h3>Raises:</h3>
+    error when url is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
+<span class="keyword">local</span> res = ada.<span class="function-name">search_encode</span>(<span class="string">"http://host/?a=b&amp;c=d&amp;e=f&amp;a=g"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search_decode"></a>
+    <strong>search_decode (url)</strong>
+    </dt>
+    <dd>
+    Decodes search parameters from URL and returns a Lua table of them.</p>
+
+<p> If same parameter appears multiple times, only the value of the
+ first is returned.</p>
+
+<p> Given the following URL:
+    &ldquo;http://host/?a=b&amp;c=d&amp;e=f&amp;a=g&rdquo;</p>
+
+<p> The following table is returned:
+    {
+      a = &ldquo;b&rdquo;,
+      c = &ldquo;d&rdquo;,
+      e = &ldquo;f&rdquo;,
+    }
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">url</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         url (with search) to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <span class="type">nil</span></span>
+        a table of all search parameters (a string:string map).</li>
+        <li>
+           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        error message</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    error when url is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
+<span class="keyword">local</span> res = ada.<span class="function-name">search_decode</span>(<span class="string">"http://host/?a=b&amp;c=d&amp;e=f&amp;a=g"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "search_decode_all"></a>
+    <strong>search_decode_all (url)</strong>
+    </dt>
+    <dd>
+    Decodes all search parameters and returns a Lua table of them.</p>
+
+<p> Given the following URL:
+    &ldquo;http://host/?a=b&amp;a=c&amp;d=e&rdquo;"</p>
+
+<p> The following table is returned:
+    {
+      a = { &ldquo;b&rdquo;, &ldquo;c&rdquo; },
+      d = { &ldquo;e&rdquo; },
+    }
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">url</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         url (with search) to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <span class="type">nil</span></span>
+        a table of all search parameters (a string:table [array] map).</li>
+        <li>
+           <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        error message</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    error when url is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> ada = <span class="global">require</span>(<span class="string">"resty.ada"</span>)
+<span class="keyword">local</span> res = ada.<span class="function-name">search_decode_all</span>(<span class="string">"http://host/?a=b&amp;a=c&amp;d=e"</span>)</pre>
     </ul>
 
 </dd>
@@ -2976,7 +3184,7 @@ U+FF61 HALFWIDTH IDEOGRAPHIC FULL STOP
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-08-20 21:17:51 </i>
+<i style="float:right;">Last updated 2024-09-03 15:49:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

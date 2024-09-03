@@ -38,6 +38,7 @@
 <li><a href="#Has_Functions">Has Functions </a></li>
 <li><a href="#Get_Functions">Get Functions </a></li>
 <li><a href="#Set_Functions">Set Functions </a></li>
+<li><a href="#Encode_and_Decode_Functions">Encode and Decode Functions </a></li>
 <li><a href="#Remove_Functions">Remove Functions </a></li>
 <li><a href="#Iterate_Functions">Iterate Functions </a></li>
 <li><a href="#Other_Functions">Other Functions </a></li>
@@ -102,6 +103,21 @@
 	<tr>
 	<td class="name" nowrap><a href="#append">append (search, key, value)</a></td>
 	<td class="summary">Append value to the the search parameter.</td>
+	</tr>
+</table>
+<h2><a href="#Encode_and_Decode_Functions">Encode and Decode Functions </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#encode">encode (params)</a></td>
+	<td class="summary">Encodes search parameters and returns an query string.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#decode">decode (search)</a></td>
+	<td class="summary">Decodes search parameters and returns a Lua table of them.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#decode_all">decode_all (search)</a></td>
+	<td class="summary">Decodes all search parameters and returns a Lua table of them.</td>
 	</tr>
 </table>
 <h2><a href="#Remove_Functions">Remove Functions </a></h2>
@@ -453,6 +469,150 @@
     <ul>
         <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>)
 <span class="keyword">local</span> result = search.<span class="function-name">append</span>(<span class="string">"a=b&amp;c=d&amp;e=f"</span>, <span class="string">"a"</span>, <span class="string">"g"</span>)</pre>
+    </ul>
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Encode_and_Decode_Functions"></a>Encode and Decode Functions </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "encode"></a>
+    <strong>encode (params)</strong>
+    </dt>
+    <dd>
+    Encodes search parameters and returns an query string.</p>
+
+<ul>
+<li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> keys are allowed.</li>
+<li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>, <code>boolean</code> and <code>number</code> values are allowed or an array of them</li>
+<li><code>false</code> value is treated as missing (same as <code>nil</code>)</li>
+<li><code>true</code> returns <code>&quot;&quot;</code> (empty string)</li>
+<li>negative and positive <code>inf</code> and <code>NaN</code> are not allowed as numbers in values</li>
+</ul>
+
+
+<p> When passing a table the keys will be sorted and with string the given order
+ is preserved.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">params</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search parameters to encode (either a <a href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a> or <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        encoded query string
+    </ol>
+
+    <h3>Raises:</h3>
+    error when search or key is not a table or string, or when the rules above are not followed
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>)
+<span class="keyword">local</span> result = search.<span class="function-name">encode</span>({
+  g = <span class="string">"h"</span>,
+  a = { <span class="string">"f"</span>, <span class="string">"b"</span>, },
+  c = <span class="string">"d"</span>,
+})</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "decode"></a>
+    <strong>decode (search)</strong>
+    </dt>
+    <dd>
+    Decodes search parameters and returns a Lua table of them.</p>
+
+<p> If same parameter appears multiple times, only the value of the
+ first is returned.</p>
+
+<p> Given the following query string:
+    &ldquo;a=b&amp;c=d&amp;e=f&amp;a=g&rdquo;</p>
+
+<p> The following table is returned:
+    {
+      a = &ldquo;b&rdquo;,
+      c = &ldquo;d&rdquo;,
+      e = &ldquo;f&rdquo;,
+    }
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">search</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        a table of all search parameters (a string:string map).
+    </ol>
+
+    <h3>Raises:</h3>
+    error when search or key is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>)
+<span class="keyword">local</span> result = search.<span class="function-name">decode</span>(<span class="string">"a=b&amp;c=d&amp;e=f&amp;a=g"</span>)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "decode_all"></a>
+    <strong>decode_all (search)</strong>
+    </dt>
+    <dd>
+    Decodes all search parameters and returns a Lua table of them.</p>
+
+<p> Given the following query string:
+    &ldquo;a=b&amp;a=c&amp;d=e&rdquo;"</p>
+
+<p> The following table is returned:
+    {
+      a = { &ldquo;b&rdquo;, &ldquo;c&rdquo; },
+      d = { &ldquo;e&rdquo; },
+    }
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">search</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         search to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        a table of all search parameters (a string:table [array] map).
+    </ol>
+
+    <h3>Raises:</h3>
+    error when search or key is not a string
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> search = <span class="global">require</span>(<span class="string">"resty.ada.search"</span>)
+<span class="keyword">local</span> result = search.<span class="function-name">decode_all</span>(<span class="string">"a=b&amp;a=c&amp;d=e"</span>)</pre>
     </ul>
 
 </dd>
@@ -823,7 +983,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-08-20 21:17:51 </i>
+<i style="float:right;">Last updated 2024-09-03 15:49:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

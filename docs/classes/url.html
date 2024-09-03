@@ -34,6 +34,7 @@
 
 <h2>Contents</h2>
 <ul>
+<li><a href="#Decode_Methods">Decode Methods </a></li>
 <li><a href="#Has_Methods">Has Methods </a></li>
 <li><a href="#Get_Methods">Get Methods </a></li>
 <li><a href="#Set_Methods">Set Methods </a></li>
@@ -66,6 +67,13 @@
 <p> See: <a href="https://url.spec.whatwg.org/#url-representation">https://url.spec.whatwg.org/#url-representation</a></p>
 
 
+<h2><a href="#Decode_Methods">Decode Methods </a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#url:decode">url:decode ()</a></td>
+	<td class="summary">Decodes URL and return its components in Lua table.</td>
+	</tr>
+</table>
 <h2><a href="#Has_Methods">Has Methods </a></h2>
 <table class="function_list">
 	<tr>
@@ -230,6 +238,14 @@
 	<td class="summary">Parses search from URL and returns an instance of Ada URL Search.</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#url:search_decode">url:search_decode ()</a></td>
+	<td class="summary">Decodes search parameters from URL and returns a Lua table of them.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#url:search_decode_all">url:search_decode_all (url)</a></td>
+	<td class="summary">Decodes all search parameters from URL and returns a Lua table of them.</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#url:search_has">url:search_has (key)</a></td>
 	<td class="summary">Checks whether the url has a search with a key.</td>
 	</tr>
@@ -327,6 +343,55 @@
 <br/>
 
 
+    <h2 class="section-header "><a name="Decode_Methods"></a>Decode Methods </h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "url:decode"></a>
+    <strong>url:decode ()</strong>
+    </dt>
+    <dd>
+    Decodes URL and return its components in Lua table.</p>
+
+<p> Given a following URL:
+    https://user:pass@example.com:1234/foo/bar?baz#quux</p>
+
+<p> This function will return following table:
+    {
+      scheme_type = 2,
+      protocol = &ldquo;https:&rdquo;,
+      username = &ldquo;user&rdquo;,
+      password = &ldquo;pass&rdquo;,
+      origin = &ldquo;https://example.com:1234&rdquo;,
+      host_type = 0,
+      host = &ldquo;example.com:1234&rdquo;,
+      hostname = &ldquo;example.com&rdquo;,
+      port = 1234,
+      pathname = &ldquo;/foo/bar&rdquo;,
+      search = &ldquo;?baz&rdquo;,
+      hash = &ldquo;#quux&rdquo;,
+    }
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        table of URL components
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> url = <span class="global">require</span>(<span class="string">"resty.ada"</span>).<span class="function-name">parse</span>(
+  <span class="string">"https://user:pass@host:1234/path?search#hash"</span>)
+<span class="keyword">local</span> res = url:<span class="function-name">decode</span>()</pre>
+    </ul>
+
+</dd>
+</dl>
     <h2 class="section-header "><a name="Has_Methods"></a>Has Methods </h2>
 
     <dl class="function">
@@ -1235,6 +1300,8 @@
     <dd>
     Sets port to the URL.</p>
 
+<p> Note: inf, -inf and NaN are considered invalid and they raise an error.</p>
+
 <p> See: <a href="https://url.spec.whatwg.org/#dom-url-port">https://url.spec.whatwg.org/#dom-url-port</a>
 
 
@@ -1253,7 +1320,7 @@
         self (except on errors <code>nil</code>)</li>
         <li>
            <span class="types"><span class="type">nil</span> or <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-        error message</li>
+        error message (e.g. when port is out of acceptable range)</li>
     </ol>
 
     <h3>Raises:</h3>
@@ -1489,6 +1556,78 @@
     <ul>
         <pre class="example"><span class="keyword">local</span> url = <span class="global">require</span>(<span class="string">"resty.ada"</span>).<span class="function-name">parse</span>(<span class="string">"https://user:pass@host:1234/?a=b&amp;c=d&amp;e=f"</span>)
 <span class="keyword">local</span> search = url:<span class="function-name">search_parse</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "url:search_decode"></a>
+    <strong>url:search_decode ()</strong>
+    </dt>
+    <dd>
+    Decodes search parameters from URL and returns a Lua table of them.</p>
+
+<p> If same parameter appears multiple times, only the value of the
+ first is returned.</p>
+
+<p> An example return value:
+    {
+      key1 = &ldquo;value&rdquo;,
+      key2 = &ldquo;value2&rdquo;,
+    }
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        a table of all search parameters (a string:string map).
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> url = <span class="global">require</span>(<span class="string">"resty.ada"</span>).<span class="function-name">parse</span>(<span class="string">"http://host/?a=b&amp;c=d&amp;e=f&amp;a=g"</span>)
+<span class="keyword">local</span> result = url:<span class="function-name">search_decode</span>()</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "url:search_decode_all"></a>
+    <strong>url:search_decode_all (url)</strong>
+    </dt>
+    <dd>
+    Decodes all search parameters from URL and returns a Lua table of them.</p>
+
+<p> An example return value:
+    {
+      key1 = { &ldquo;first&rdquo;, &ldquo;second&rdquo;, },
+      key2 = { &ldquo;value&rdquo; },
+    }
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">url</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         url (with search) to parse
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        a table of all search parameters (a string:table [array] map).
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="keyword">local</span> url = <span class="global">require</span>(<span class="string">"resty.ada"</span>).<span class="function-name">parse</span>(<span class="string">"http://host/?a=b&amp;a=c&amp;d=e"</span>)
+<span class="keyword">local</span> result = url:<span class="function-name">search_decode_all</span>()</pre>
     </ul>
 
 </dd>
@@ -2124,7 +2263,7 @@ url:<span class="function-name">free</span>()</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-08-20 21:17:51 </i>
+<i style="float:right;">Last updated 2024-09-03 15:49:45 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
