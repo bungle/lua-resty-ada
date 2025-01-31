@@ -83,7 +83,7 @@ Or run the test suite with [act](https://github.com/nektos/act):
 `lua-resty-ada` uses two clause BSD license.
 
 ```
-Copyright (c) 2024 Aapo Talvensaari, 2024 Guilherme Salazar
+Copyright (c) 2024–2025 Aapo Talvensaari, 2024 Guilherme Salazar
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
