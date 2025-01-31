@@ -2,6 +2,10 @@
 
 All notable changes to `lua-resty-ada` will be documented in this file.
 
+## [1.2.0] - Unreleased
+### Changed
+- Bumped Ada to `3.2.1`
+
 ## [1.1.0] - 2024-09-03
 ### Added
 - `url:decode` method
