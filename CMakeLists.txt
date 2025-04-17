@@ -4,10 +4,12 @@ project(
   ada
   DESCRIPTION "Fast spec-compliant URL parser"
   LANGUAGES C CXX
-  VERSION 3.2.1
+  VERSION 3.2.4
 )
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
@@ -18,8 +20,8 @@ include(FetchContent)
 
 FetchContent_Declare(
   ada
-  URL      https://github.com/ada-url/ada/releases/download/v3.2.1/singleheader.zip
-  URL_HASH SHA256=2954ff2208aa016de4213af7371273e1c41c71571e373eadf550ada808c79f42
+  URL      https://github.com/ada-url/ada/releases/download/v3.2.4/singleheader.zip
+  URL_HASH SHA256=bd89fcf57c93e965e6e2488448ab9d1cf8005311808c563b288f921d987e4924
 )
 
 FetchContent_MakeAvailable(ada)
