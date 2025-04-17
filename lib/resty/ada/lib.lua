@@ -16,6 +16,12 @@ local ffi_load = ffi.load
 
 ffi.cdef([[
 typedef struct {
+  int major;
+  int minor;
+  int revision;
+} ada_version_components;
+
+typedef struct {
   const char* data;
   size_t length;
 } ada_string;
@@ -47,6 +53,9 @@ typedef void* ada_url_search_params;
 typedef void* ada_url_search_params_keys_iter;
 typedef void* ada_url_search_params_values_iter;
 typedef void* ada_url_search_params_entries_iter;
+
+const char* ada_get_version();
+ada_version_components ada_get_version_components();
 
 const ada_url_components* ada_get_components(ada_url result);
 

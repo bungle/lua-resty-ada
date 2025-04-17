@@ -8,6 +8,7 @@
 
 local lib = require("resty.ada.lib")
 local utils = require("resty.ada.utils")
+local isempty = require("table.isempty")
 
 
 local ada_string_to_lua = utils.ada_string_to_lua
@@ -20,7 +21,6 @@ local ffi_gc = require("ffi").gc
 
 
 local type = type
-local next = next
 local pairs = pairs
 local assert = assert
 local tonumber = tonumber
@@ -541,7 +541,7 @@ mt.__pairs = mt.pairs
 ---
 -- Iterate over each parameter in search parameters.
 --
--- @function __pairs
+-- @function __ipairs
 -- @treturn function iterator function
 -- @treturn cdata state
 --
@@ -684,7 +684,7 @@ end
 -- })
 local function encode(params)
   if type(params) == "table" then
-    if not next(params) then
+    if isempty(params) then
       return ""
     end
 

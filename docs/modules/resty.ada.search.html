@@ -87,18 +87,18 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#get">get (search, key)</a></td>
-	<td class="summary">Get search parameter&rsquo;s value.</td>
+	<td class="summary">Get search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#get_all">get_all (search, key)</a></td>
-	<td class="summary">Get all the search parameter&rsquo;s values.</td>
+	<td class="summary">Get all the search parameter's values.</td>
 	</tr>
 </table>
 <h2><a href="#Set_Functions">Set Functions </a></h2>
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#set">set (search, key, value)</a></td>
-	<td class="summary">Set the search parameter&rsquo;s value.</td>
+	<td class="summary">Set the search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#append">append (search, key, value)</a></td>
@@ -128,7 +128,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#remove_value">remove_value (search, key, value)</a></td>
-	<td class="summary">Remove search parameter&rsquo;s value.</td>
+	<td class="summary">Remove search parameter's value.</td>
 	</tr>
 </table>
 <h2><a href="#Iterate_Functions">Iterate Functions </a></h2>
@@ -178,7 +178,7 @@
     <strong>parse (search)</strong>
     </dt>
     <dd>
-    Parses search and returns an instance of Ada URL Search.</p>
+    Parses search and returns an instance of Ada URL Search. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#interface-urlsearchparams">https://url.spec.whatwg.org/#interface-urlsearchparams</a>
 
@@ -217,7 +217,7 @@
     <strong>has (search, key)</strong>
     </dt>
     <dd>
-    Checks whether the search has a key.</p>
+    Checks whether the search has a key. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
 
@@ -257,7 +257,7 @@
     <strong>has_value (search, key, value)</strong>
     </dt>
     <dd>
-    Checks whether the search has a key with a specific value.</p>
+    Checks whether the search has a key with a specific value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
 
@@ -305,7 +305,7 @@
     <strong>get (search, key)</strong>
     </dt>
     <dd>
-    Get search parameter&rsquo;s value.</p>
+    Get search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-get">https://url.spec.whatwg.org/#dom-urlsearchparams-get</a>
 
@@ -345,7 +345,7 @@
     <strong>get_all (search, key)</strong>
     </dt>
     <dd>
-    Get all the search parameter&rsquo;s values.</p>
+    Get all the search parameter's values. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-getall">https://url.spec.whatwg.org/#dom-urlsearchparams-getall</a>
 
@@ -389,7 +389,7 @@
     <strong>set (search, key, value)</strong>
     </dt>
     <dd>
-    Set the search parameter&rsquo;s value.</p>
+    Set the search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-set">https://url.spec.whatwg.org/#dom-urlsearchparams-set</a>
 
@@ -433,7 +433,7 @@
     <strong>append (search, key, value)</strong>
     </dt>
     <dd>
-    Append value to the the search parameter.</p>
+    Append value to the the search parameter. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-append">https://url.spec.whatwg.org/#dom-urlsearchparams-append</a>
 
@@ -481,16 +481,15 @@
     <strong>encode (params)</strong>
     </dt>
     <dd>
-    Encodes search parameters and returns an query string.</p>
+    Encodes search parameters and returns an query string. </p>
 
 <ul>
-<li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> keys are allowed.</li>
-<li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>, <code>boolean</code> and <code>number</code> values are allowed or an array of them</li>
-<li><code>false</code> value is treated as missing (same as <code>nil</code>)</li>
-<li><code>true</code> returns <code>&quot;&quot;</code> (empty string)</li>
-<li>negative and positive <code>inf</code> and <code>NaN</code> are not allowed as numbers in values</li>
+    <li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a> keys are allowed.</li>
+    <li>only <a href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a>, <code>boolean</code> and <code>number</code> values are allowed or an array of them</li>
+    <li><code>false</code> value is treated as missing (same as <code>nil</code>)</li>
+    <li><code>true</code> returns <code>&quot;&quot;</code> (empty string)</li>
+    <li>negative and positive <code>inf</code> and <code>NaN</code> are not allowed as numbers in values</li>
 </ul>
-
 
 <p> When passing a table the keys will be sorted and with string the given order
  is preserved.
@@ -531,20 +530,25 @@
     <strong>decode (search)</strong>
     </dt>
     <dd>
-    Decodes search parameters and returns a Lua table of them.</p>
+
+<p>Decodes search parameters and returns a Lua table of them. </p>
 
 <p> If same parameter appears multiple times, only the value of the
  first is returned.</p>
 
-<p> Given the following query string:
-    &ldquo;a=b&amp;c=d&amp;e=f&amp;a=g&rdquo;</p>
+<p> Given the following query string:</p>
+<pre><code>"a=b&amp;c=d&amp;e=f&amp;a=g"
+</code></pre>
 
-<p> The following table is returned:
-    {
-      a = &ldquo;b&rdquo;,
-      c = &ldquo;d&rdquo;,
-      e = &ldquo;f&rdquo;,
-    }
+<p> The following table is returned:</p>
+<pre><code>{
+  a = "b",
+  c = "d",
+  e = "f",
+}
+</code></pre>
+
+
 
 
     <h3>Parameters:</h3>
@@ -578,16 +582,21 @@
     <strong>decode_all (search)</strong>
     </dt>
     <dd>
-    Decodes all search parameters and returns a Lua table of them.</p>
 
-<p> Given the following query string:
-    &ldquo;a=b&amp;a=c&amp;d=e&rdquo;"</p>
+<p>Decodes all search parameters and returns a Lua table of them. </p>
 
-<p> The following table is returned:
-    {
-      a = { &ldquo;b&rdquo;, &ldquo;c&rdquo; },
-      d = { &ldquo;e&rdquo; },
-    }
+<p> Given the following query string:</p>
+<pre><code>"a=b&amp;a=c&amp;d=e""
+</code></pre>
+
+<p> The following table is returned:</p>
+<pre><code>{
+  a = { "b", "c" },
+  d = { "e" },
+}
+</code></pre>
+
+
 
 
     <h3>Parameters:</h3>
@@ -625,7 +634,7 @@
     <strong>remove (search, key)</strong>
     </dt>
     <dd>
-    Remove search parameter.</p>
+    Remove search parameter. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
 
@@ -665,7 +674,7 @@
     <strong>remove_value (search, key, value)</strong>
     </dt>
     <dd>
-    Remove search parameter&rsquo;s value.</p>
+    Remove search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
 
@@ -682,7 +691,7 @@
         </li>
         <li><span class="parameter">value</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         search parameter&rsquo;s value
+         search parameter's value
         </li>
     </ul>
 
@@ -911,7 +920,7 @@
     <strong>sort (search)</strong>
     </dt>
     <dd>
-    Sort search parameters.</p>
+    Sort search parameters. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-sort">https://url.spec.whatwg.org/#dom-urlsearchparams-sort</a>
 
@@ -983,7 +992,7 @@
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-09-03 15:49:45 </i>
+<i style="float:right;">Last updated 2026-05-29 13:05:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
