@@ -92,11 +92,11 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#search:get">search:get (key)</a></td>
-	<td class="summary">Get search parameter&rsquo;s value.</td>
+	<td class="summary">Get search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search:get_all">search:get_all (key)</a></td>
-	<td class="summary">Get all the search parameter&rsquo;s values.</td>
+	<td class="summary">Get all the search parameter's values.</td>
 	</tr>
 </table>
 <h2><a href="#Set_Methods">Set Methods </a></h2>
@@ -107,7 +107,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search:set">search:set (key, value)</a></td>
-	<td class="summary">Set the search parameter&rsquo;s value.</td>
+	<td class="summary">Set the search parameter's value.</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search:append">search:append (key, value)</a></td>
@@ -136,7 +136,7 @@
 	<td class="summary">Iterate over each key and value in search parameters.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#search:__pairs">search:__pairs ()</a></td>
+	<td class="name" nowrap><a href="#search:__ipairs">search:__ipairs ()</a></td>
 	<td class="summary">Iterate over each parameter in search parameters.</td>
 	</tr>
 	<tr>
@@ -163,7 +163,7 @@
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#search:remove_value">search:remove_value (key, value)</a></td>
-	<td class="summary">Remove search parameter&rsquo;s value.</td>
+	<td class="summary">Remove search parameter's value.</td>
 	</tr>
 </table>
 <h2><a href="#Iterate_Methods">Iterate Methods </a></h2>
@@ -202,16 +202,20 @@
     <strong>search:decode ()</strong>
     </dt>
     <dd>
-    Decodes search parameters and returns a Lua table of them.</p>
+
+<p>Decodes search parameters and returns a Lua table of them. </p>
 
 <p> If same parameter appears multiple times, only the value of the
  first is returned.</p>
 
-<p> An example return value:
-    {
-      key1 = &ldquo;value&rdquo;,
-      key2 = &ldquo;value2&rdquo;,
-    }
+<p> An example return value:</p>
+<pre><code>{
+  key1 = "value",
+  key2 = "value2",
+}
+</code></pre>
+
+
 
 
 
@@ -236,13 +240,17 @@
     <strong>search:decode ()</strong>
     </dt>
     <dd>
-    Decodes all search parameters and returns a Lua table of them.</p>
 
-<p> An example return value:
-    {
-      key1 = { &ldquo;first&rdquo;, &ldquo;second&rdquo;, },
-      key2 = { &ldquo;value&rdquo; },
-    }
+<p>Decodes all search parameters and returns a Lua table of them. </p>
+
+<p> An example return value:</p>
+<pre><code>{
+  key1 = { "first", "second", },
+  key2 = { "value" },
+}
+</code></pre>
+
+
 
 
 
@@ -271,7 +279,7 @@
     <strong>search:has (key)</strong>
     </dt>
     <dd>
-    Checks whether the search has a key.</p>
+    Checks whether the search has a key. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
 
@@ -307,7 +315,7 @@
     <strong>search:has_value (key, value)</strong>
     </dt>
     <dd>
-    Checks whether the search has a key with a specific value.</p>
+    Checks whether the search has a key with a specific value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-has">https://url.spec.whatwg.org/#dom-urlsearchparams-has</a>
 
@@ -351,7 +359,7 @@
     <strong>search:get (key)</strong>
     </dt>
     <dd>
-    Get search parameter&rsquo;s value.</p>
+    Get search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-get">https://url.spec.whatwg.org/#dom-urlsearchparams-get</a>
 
@@ -387,7 +395,7 @@
     <strong>search:get_all (key)</strong>
     </dt>
     <dd>
-    Get all the search parameter&rsquo;s values.</p>
+    Get all the search parameter's values. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-getall">https://url.spec.whatwg.org/#dom-urlsearchparams-getall</a>
 
@@ -461,7 +469,7 @@
     <strong>search:set (key, value)</strong>
     </dt>
     <dd>
-    Set the search parameter&rsquo;s value.</p>
+    Set the search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-set">https://url.spec.whatwg.org/#dom-urlsearchparams-set</a>
 
@@ -501,7 +509,7 @@
     <strong>search:append (key, value)</strong>
     </dt>
     <dd>
-    Append value to the the search parameter.</p>
+    Append value to the the search parameter. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-append">https://url.spec.whatwg.org/#dom-urlsearchparams-append</a>
 
@@ -545,7 +553,7 @@
     <strong>search:tostring ()</strong>
     </dt>
     <dd>
-    Return search parameters as a string.</p>
+    Return search parameters as a string. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior">https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior</a>
 
@@ -572,7 +580,7 @@
     <strong>search:sort ()</strong>
     </dt>
     <dd>
-    Sort search parameters.</p>
+    Sort search parameters. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-sort">https://url.spec.whatwg.org/#dom-urlsearchparams-sort</a>
 
@@ -654,8 +662,8 @@
 
 </dd>
     <dt>
-    <a name = "search:__pairs"></a>
-    <strong>search:__pairs ()</strong>
+    <a name = "search:__ipairs"></a>
+    <strong>search:__ipairs ()</strong>
     </dt>
     <dd>
     Iterate over each parameter in search parameters.
@@ -688,7 +696,7 @@
     <strong>search:__tostring ()</strong>
     </dt>
     <dd>
-    Return search parameters as a string.</p>
+    Return search parameters as a string. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior">https://url.spec.whatwg.org/#urlsearchparams-stringification-behavior</a>
 
@@ -744,7 +752,7 @@
     <strong>search:free ()</strong>
     </dt>
     <dd>
-    Explicitly destroys the Ada URL Search instance and frees the memory.</p>
+    Explicitly destroys the Ada URL Search instance and frees the memory. </p>
 
 <p> After calling this function, further calls will result runtime error.
  If this is not explicitly called, the memory is freed with garbage
@@ -771,7 +779,7 @@ search:<span class="function-name">free</span>()</pre>
     <strong>search:remove (key)</strong>
     </dt>
     <dd>
-    Remove search parameter.</p>
+    Remove search parameter. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
 
@@ -807,7 +815,7 @@ search:<span class="function-name">free</span>()</pre>
     <strong>search:remove_value (key, value)</strong>
     </dt>
     <dd>
-    Remove search parameter&rsquo;s value.</p>
+    Remove search parameter's value. </p>
 
 <p> See: <a href="https://url.spec.whatwg.org/#dom-urlsearchparams-delete">https://url.spec.whatwg.org/#dom-urlsearchparams-delete</a>
 
@@ -820,7 +828,7 @@ search:<span class="function-name">free</span>()</pre>
         </li>
         <li><span class="parameter">value</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
-         search parameter&rsquo;s value
+         search parameter's value
         </li>
     </ul>
 
@@ -1003,7 +1011,7 @@ search:<span class="function-name">free</span>()</pre>
 </div> <!-- id="main" -->
 <div id="about">
 <i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
-<i style="float:right;">Last updated 2024-09-03 15:49:45 </i>
+<i style="float:right;">Last updated 2026-05-29 13:05:33 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>

@@ -17,6 +17,7 @@ local number_to_string = utils.number_to_string
 
 
 local ffi_gc = require("ffi").gc
+local ffi_str = require("ffi").string
 
 
 local type = type
@@ -26,7 +27,9 @@ local setmetatable = setmetatable
 
 
 local _OMITTED = 0xffffffff
-local _VERSION = "1.1.0"
+local _VERSION = "1.2.0"
+local _ADA_VERSION
+local _ADA_VERSION_COMPONENTS
 
 
 local function parse_component(c, raw)
@@ -1155,7 +1158,7 @@ end
 ---
 -- Iterate over each parameter in search parameters in URL.
 --
--- @function search_pairs
+-- @function search_ipairs
 -- @treturn function iterator function
 -- @treturn cdata state
 --
@@ -2963,13 +2966,65 @@ end
 
 
 ---
+-- Version Functions
+-- @section version-functions
+
+
+---
+-- Get Ada C library version.
+--
+-- @function get_version
+-- @treturn string Ada C library version
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local version = ada.get_version()
+local function get_version()
+  if not _ADA_VERSION then
+    _ADA_VERSION = ffi_str(lib.ada_get_version())
+  end
+  return _ADA_VERSION
+end
+
+
+---
+-- Get Ada C library version components.
+--
+-- This function will return following table when
+-- using C library version 3.4.4:
+--    {
+--      major = 3,
+--      minor = 4,
+--      revision = 4,
+--    }
+--
+-- @function get_version_components
+-- @treturn table Ada C library version components
+--
+-- @usage
+-- local ada = require("resty.ada")
+-- local version_components = ada.get_version_components()
+local function get_version_components()
+  if not _ADA_VERSION_COMPONENTS then
+    local version_components = lib.ada_get_version_components()
+    _ADA_VERSION_COMPONENTS = {
+      major = tonumber(version_components.major, 10),
+      minor = tonumber(version_components.minor, 10),
+      revision = tonumber(version_components.revision, 10),
+    }
+  end
+  return _ADA_VERSION_COMPONENTS
+end
+
+
+---
 -- Fields
 -- @section fields
 
 
 return {
   ---
-  -- resty.ada version
+  -- resty.ada._VERSION
   -- @usage
   -- local ada = require("resty.ada")
   -- local ver = ada._VERSION
@@ -3042,4 +3097,6 @@ return {
   search_ipairs = search_ipairs,
   search_sort = search_sort,
   search_size = search_size,
+  get_version = get_version,
+  get_version_components = get_version_components,
 }

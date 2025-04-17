@@ -13,7 +13,7 @@ copy-library: build
 	@cp build/$(LIBRARY) .
 
 luarocks-install:
-	@luarocks make
+	@luarocks --lua-version 5.1 make
 
 lint:
 	@luacheck ./lib
@@ -33,7 +33,7 @@ docs:
 	@ldoc .
 
 install-rock:
-	@luarocks make
+	@luarocks --lua-version 5.1 make
 
 install-lib: build
 	@cmake --install build

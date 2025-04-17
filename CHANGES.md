@@ -2,12 +2,15 @@
 
 All notable changes to `lua-resty-ada` will be documented in this file.
 
-## [1.2.0] - Unreleased
+## [1.2.0] - 2026-05-29
 ### Fixed
 - Ada library will now be also loaded from <lib>.so|.dylib.<version>, in addition to
   wrong <lib>.<version>.so|.dylib.
+### Added
+- `get_version` function
+- `get_version_components` function
 ### Changed
-- Bumped Ada to `3.2.1
+- Bumped Ada to `3.4.4`
 
 ## [1.1.0] - 2024-09-03
 ### Added
