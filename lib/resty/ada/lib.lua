@@ -191,9 +191,13 @@ do
 
   -- try to load ada library from package.cpath
   for _, library_name in ipairs(library_names) do
-    for _, library_version in ipairs(library_versions) do
-      for _, library_extension in ipairs(library_extensions) do
-        local lib = load_lib_from_cpath(library_name .. library_version .. library_extension)
+    for _, library_extension in ipairs(library_extensions) do
+      for _, library_version in ipairs(library_versions) do
+        local lib = load_lib_from_cpath(library_name .. library_extension .. library_version)
+        if lib then
+          return lib
+        end
+        lib = load_lib_from_cpath(library_name .. library_version .. library_extension)
         if lib then
           return lib
         end
