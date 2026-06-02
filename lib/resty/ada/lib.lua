@@ -195,6 +195,7 @@ do
 
   local library_versions = {
     "",
+    ".4",
     ".3",
     ".2",
   }
