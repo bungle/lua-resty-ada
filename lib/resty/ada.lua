@@ -27,7 +27,7 @@ local setmetatable = setmetatable
 
 
 local _OMITTED = 0xffffffff
-local _VERSION = "1.2.0"
+local _VERSION = "1.2.1"
 local _ADA_VERSION
 local _ADA_VERSION_COMPONENTS
 

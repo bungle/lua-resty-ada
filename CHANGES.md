@@ -2,6 +2,10 @@
 
 All notable changes to `lua-resty-ada` will be documented in this file.
 
+## [1.2.1] - 2026-06-02
+### Fixed
+- Also try to load .so version 4.
+
 ## [1.2.0] - 2026-05-29
 ### Fixed
 - Ada library will now be also loaded from <lib>.so|.dylib.<version>, in addition to
