@@ -398,15 +398,15 @@ describe("Ada", function()
     end)
     describe(".get_version", function()
       it("works", function()
-        equal("3.4.4", ada.get_version())
+        equal("4.0.0", ada.get_version())
       end)
     end)
     describe(".get_version_components", function()
       it("works", function()
         same({
-          major = 3,
-          minor = 4,
-          revision = 4,
+          major = 4,
+          minor = 0,
+          revision = 0,
         }, ada.get_version_components())
         equal(ada.get_version_components(), ada.get_version_components())
       end)

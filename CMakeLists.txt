@@ -4,7 +4,7 @@ project(
   ada
   DESCRIPTION "Fast spec-compliant URL parser"
   LANGUAGES C CXX
-  VERSION 3.3.0
+  VERSION 4.0.0
 )
 
 set(CMAKE_CXX_STANDARD 20)
@@ -20,8 +20,8 @@ include(FetchContent)
 
 FetchContent_Declare(
   ada
-  URL      https://github.com/ada-url/ada/releases/download/v3.4.4/singleheader.zip
-  URL_HASH SHA256=cb0dc03516129e3bfc2c23b24bff039a01fc7ccec1a7585458c425cb57bf9fcb
+  URL      https://github.com/ada-url/ada/releases/download/v4.0.0/singleheader.zip
+  URL_HASH SHA256=d7fa5aea7b3805c91111231d1aaaeefc39ae20562a9f599e13c22471ee576b9f
 )
 
 FetchContent_MakeAvailable(ada)
