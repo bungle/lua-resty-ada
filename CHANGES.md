@@ -2,6 +2,11 @@
 
 All notable changes to `lua-resty-ada` will be documented in this file.
 
+
+## [1.3.0] - Unreleased
+### Changed
+- Bumped Ada to `4.0.0`
+
 ## [1.2.1] - 2026-06-02
 ### Fixed
 - Also try to load .so version 4.
